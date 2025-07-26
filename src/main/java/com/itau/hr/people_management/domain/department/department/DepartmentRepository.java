@@ -1,0 +1,15 @@
+package com.itau.hr.people_management.domain.department.department;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import com.itau.hr.people_management.domain.department.Department;
+
+public interface DepartmentRepository {
+    Department save(Department department);
+    Optional<Department> findById(UUID id);
+    void delete(Department department);
+    List<Department> findAll();
+    List<Department> findByCostCenterCode(String costCenterCode);
+}
