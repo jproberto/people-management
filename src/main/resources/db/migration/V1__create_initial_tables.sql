@@ -8,8 +8,9 @@ CREATE TABLE IF NOT EXISTS departments (
 -- Tabela para os cargos
 CREATE TABLE IF NOT EXISTS positions (
     id UUID PRIMARY KEY,
-    title VARCHAR(255) NOT NULL UNIQUE,
-    position_level VARCHAR(255) NOT NULL
+    title VARCHAR(100) NOT NULL, 
+    position_level VARCHAR(50) NOT NULL,
+    CONSTRAINT uk_positions_title_level UNIQUE (title, position_level) 
 );
 
 -- Tabela para os funcionários

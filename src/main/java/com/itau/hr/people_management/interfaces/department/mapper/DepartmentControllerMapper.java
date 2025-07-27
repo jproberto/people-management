@@ -1,5 +1,7 @@
 package com.itau.hr.people_management.interfaces.department.mapper;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.itau.hr.people_management.application.department.dto.CreateDepartmentRequest;
@@ -27,5 +29,14 @@ public class DepartmentControllerMapper {
         responseDTO.setName(applicationResponse.getName());
         responseDTO.setCostCenterCode(applicationResponse.getCostCenterCode());
         return responseDTO;
+    }
+
+    public List<DepartmentResponseDTO> toDepartmentResponseDTOList(List<DepartmentResponse> applicationResponses) {
+        if (applicationResponses == null || applicationResponses.isEmpty()) {
+            return List.of();
+        }
+        return applicationResponses.stream()
+                .map(this::toDepartmentResponseDTO)
+                .toList();
     }
 }

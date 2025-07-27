@@ -25,14 +25,13 @@ public class CreatePositionUseCase {
     }
 
     public PositionResponse execute(CreatePositionRequest request) {
-        if (positionRepository.findByTitle(request.getTitle()).isPresent()) {
-            throw new IllegalArgumentException(messageSource.getMessage("error.position.title.exists", request.getTitle()));
-        }
-
         PositionLevel positionLevel = PositionLevel.fromString(request.getPositionLevelName(), messageSource);
-        
         if (positionLevel == null) {
             throw new IllegalArgumentException(messageSource.getMessage("validation.positionlevel.name.blank"));
+        }
+
+        if (positionRepository.findByTitleAndPositionLevel(request.getTitle(), positionLevel).isPresent()) {
+            throw new IllegalArgumentException(messageSource.getMessage("error.position.title.positionlevel.exists", request.getTitle()));
         }
 
         Position position = Position.create(

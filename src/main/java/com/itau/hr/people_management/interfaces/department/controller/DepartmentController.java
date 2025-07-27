@@ -1,7 +1,10 @@
 package com.itau.hr.people_management.interfaces.department.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.itau.hr.people_management.application.department.dto.CreateDepartmentRequest;
 import com.itau.hr.people_management.application.department.dto.DepartmentResponse;
 import com.itau.hr.people_management.application.department.usecase.CreateDepartmentUseCase;
+import com.itau.hr.people_management.application.department.usecase.GetDepartmentUseCase;
 import com.itau.hr.people_management.interfaces.department.dto.DepartmentRequestDTO;
 import com.itau.hr.people_management.interfaces.department.dto.DepartmentResponseDTO;
 import com.itau.hr.people_management.interfaces.department.mapper.DepartmentControllerMapper;
@@ -26,10 +30,12 @@ import jakarta.validation.Valid;
 @Tag(name = "Department", description = "Operations related to Departments")
 public class DepartmentController {
     private final CreateDepartmentUseCase createDepartmentUseCase;
+    private final GetDepartmentUseCase getDepartmentUseCase;
     private final DepartmentControllerMapper departmentControllerMapper; 
 
-    public DepartmentController(CreateDepartmentUseCase createDepartmentUseCase, DepartmentControllerMapper departmentControllerMapper) {
+    public DepartmentController(CreateDepartmentUseCase createDepartmentUseCase, GetDepartmentUseCase getDepartmentUseCase, DepartmentControllerMapper departmentControllerMapper) {
         this.createDepartmentUseCase = createDepartmentUseCase;
+        this.getDepartmentUseCase = getDepartmentUseCase;
         this.departmentControllerMapper = departmentControllerMapper;
     }
 
@@ -47,5 +53,16 @@ public class DepartmentController {
         DepartmentResponse applicationResponse = createDepartmentUseCase.execute(applicationRequest);
         DepartmentResponseDTO responseDTO = departmentControllerMapper.toDepartmentResponseDTO(applicationResponse);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+    }
+
+    @Operation(summary = "Get all departments", description = "Retrieves a list of all departments")
+    @ApiResponse(responseCode = "200", description = "List of departments retrieved successfully",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = DepartmentResponseDTO.class)))
+    @GetMapping
+    public ResponseEntity<List<DepartmentResponseDTO>> getAllDepartments() {
+        List<DepartmentResponse> applicationResponses = getDepartmentUseCase.getAll();
+        List<DepartmentResponseDTO> responseDTOs = departmentControllerMapper.toDepartmentResponseDTOList(applicationResponses);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTOs);
     }
 }
