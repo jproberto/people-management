@@ -17,7 +17,6 @@ public enum PositionLevel {
         return displayName;
     }
 
-    // Método estático para validar se uma string corresponde a um PositionLevel válido
     public static PositionLevel fromString(String text, DomainMessageSource messageSource) {
         for (PositionLevel level : PositionLevel.values()) {
             if (level.name().equalsIgnoreCase(text) || level.getDisplayName().equalsIgnoreCase(text)) {
