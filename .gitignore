@@ -33,3 +33,5 @@ build/
 .vscode/
 logs/application.log
 logs/application.log.2025-07-26.gz
+logs/application.log
+logs/application.log
