@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import com.itau.hr.people_management.domain.department.Department;
 import com.itau.hr.people_management.domain.employee.Employee;
 import com.itau.hr.people_management.domain.position.Position;
-import com.itau.hr.people_management.domain.position.PositionLevel;
 import com.itau.hr.people_management.domain.shared.DomainMessageSource;
 import com.itau.hr.people_management.domain.shared.Email;
 

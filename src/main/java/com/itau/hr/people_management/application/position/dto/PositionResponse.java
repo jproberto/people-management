@@ -16,8 +16,7 @@ import lombok.Setter;
 public class PositionResponse {
     private UUID id;
     private String title;
-    private UUID positionLevelId;
-    private String positionLevelName; 
+    private String positionLevelName;
 
     public PositionResponse(Position position) {
         this.id = position.getId();

@@ -38,21 +38,14 @@ public class DepartmentController {
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = DepartmentResponseDTO.class)))
     @ApiResponse(responseCode = "400", description = "Invalid department data supplied",
-            content = @Content(mediaType = "application/json")) // Podemos adicionar um schema de erro aqui no futuro
+            content = @Content(mediaType = "application/json")) 
     @ApiResponse(responseCode = "409", description = "Department with given cost center code already exists",
             content = @Content(mediaType = "application/json"))
-    @PostMapping // Mapeia requisições POST para /api/v1/departments
+    @PostMapping
     public ResponseEntity<DepartmentResponseDTO> createDepartment(@Valid @RequestBody DepartmentRequestDTO requestDTO) {
-        // Mapeia o DTO de Requisição da API para o DTO de Requisição da Camada de Aplicação
         CreateDepartmentRequest applicationRequest = departmentControllerMapper.toApplicationRequest(requestDTO);
-
-        // Executa o Use Case
         DepartmentResponse applicationResponse = createDepartmentUseCase.execute(applicationRequest);
-
-        // Mapeia o DTO de Resposta da Camada de Aplicação para o DTO de Resposta da API
         DepartmentResponseDTO responseDTO = departmentControllerMapper.toDepartmentResponseDTO(applicationResponse);
-
-        // Retorna a resposta com status 201 Created
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 }
