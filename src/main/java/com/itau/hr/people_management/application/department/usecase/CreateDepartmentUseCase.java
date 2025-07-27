@@ -34,8 +34,8 @@ public class CreateDepartmentUseCase {
             request.getCostCenterCode()
         );
 
-        departmentRepository.save(department);
+        Department savedDepartment = departmentRepository.save(department);
 
-        return new DepartmentResponse(department);
+        return new DepartmentResponse(savedDepartment);
     }
 }
