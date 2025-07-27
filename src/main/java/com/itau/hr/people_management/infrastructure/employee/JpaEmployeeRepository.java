@@ -27,4 +27,6 @@ public interface JpaEmployeeRepository extends JpaRepository<EmployeeJpaEntity, 
             @Param("departmentId") UUID departmentId,
             @Param("positionId") UUID positionId
     );
+
+    Optional<EmployeeJpaEntity> findByEmail(String email);
 }

@@ -7,7 +7,7 @@ import com.itau.hr.people_management.application.department.dto.DepartmentRespon
 import com.itau.hr.people_management.interfaces.department.dto.DepartmentRequestDTO;
 import com.itau.hr.people_management.interfaces.department.dto.DepartmentResponseDTO;
 
-@Component // Marca esta classe como um bean do Spring
+@Component 
 public class DepartmentControllerMapper {
 
     public CreateDepartmentRequest toApplicationRequest(DepartmentRequestDTO apiRequestDTO) {

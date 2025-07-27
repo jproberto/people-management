@@ -20,7 +20,7 @@ public class DeleteEmployeeUseCase {
         this.messageSource = messageSource;
     }
 
-    public void deleteById(UUID id) {
+    public void execute(UUID id) {
         if (id == null) {
             throw new IllegalArgumentException(messageSource.getMessage("validation.employee.id.null"));
         }

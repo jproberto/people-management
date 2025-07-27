@@ -3,7 +3,6 @@ package com.itau.hr.people_management.infrastructure.employee;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -59,6 +58,12 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
          .map(EmployeeMapper::toDomainEntity)
          .toList()
         ;
+    }
+
+    @Override
+    public Optional<Employee> findByEmail(String email) {
+        return jpaEmployeeRepository.findByEmail(email)
+                .map(EmployeeMapper::toDomainEntity);
     }
 
 }

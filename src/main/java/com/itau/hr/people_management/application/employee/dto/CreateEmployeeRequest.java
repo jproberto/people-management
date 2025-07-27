@@ -29,9 +29,6 @@ public class CreateEmployeeRequest {
     @NotNull(message = "{validation.employee.hiredate.null}")
     private LocalDate hireDate;
 
-    @NotBlank(message = "{validation.employee.status.notBlank}")
-    private String employeeStatus;
-
     @NotNull(message = "{validation.employee.departmentId.notNull}")
     private UUID departmentId;
 

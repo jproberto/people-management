@@ -19,7 +19,8 @@ CREATE TABLE IF NOT EXISTS employees (
     email VARCHAR(255) NOT NULL UNIQUE,
     department_id UUID,
     position_id UUID,
-    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE,
     status VARCHAR(50) NOT NULL,
     FOREIGN KEY (department_id) REFERENCES departments(id),
     FOREIGN KEY (position_id) REFERENCES positions(id)

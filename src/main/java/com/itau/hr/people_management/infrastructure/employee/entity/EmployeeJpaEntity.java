@@ -1,7 +1,11 @@
 package com.itau.hr.people_management.infrastructure.employee.entity;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.itau.hr.people_management.domain.employee.EmployeeStatus;
 import com.itau.hr.people_management.infrastructure.department.entity.DepartmentJpaEntity;
@@ -52,4 +56,12 @@ public class EmployeeJpaEntity {
     @ManyToOne
     @JoinColumn(name = "position_id", nullable = false)
     private PositionJpaEntity position;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
+
+    @UpdateTimestamp 
+    @Column(name = "updated_at")
+    private Instant updatedAt;
 }

@@ -31,11 +31,8 @@ public class CreateEmployeeUseCase {
     }
 
     public EmployeeResponse execute(CreateEmployeeRequest request) {
-        EmployeeStatus status;
-        try {
-            status = EmployeeStatus.valueOf(request.getEmployeeStatus().toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(messageSource.getMessage("validation.employee.status.invalid"));
+        if (employeeRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new IllegalArgumentException(messageSource.getMessage("employee.email.already.exists", request.getEmail()));
         }
 
         var department = findOrThrow(
@@ -50,14 +47,12 @@ public class CreateEmployeeUseCase {
             request.getPositionId()
         );
 
-        var email = Email.create(request.getEmail());
-
         Employee employee = Employee.create(
                                     UUID.randomUUID(),
                                     request.getName(),
-                                    email,
+                                    Email.create(request.getEmail()),
                                     request.getHireDate(),
-                                    status,
+                                    EmployeeStatus.ACTIVE,
                                     department,
                                     position
                             );

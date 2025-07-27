@@ -13,4 +13,5 @@ public interface EmployeeRepository {
     void delete(Employee employee);
     List<Employee> findAll();
     List<Employee> search(EmployeeSearchCriteria criteria);
+    Optional<Employee> findByEmail(String email);
 }
