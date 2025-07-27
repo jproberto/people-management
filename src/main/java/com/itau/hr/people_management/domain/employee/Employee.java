@@ -28,20 +28,20 @@ public class Employee {
     private String name;
     private Email email;
     private LocalDate hireDate;
-    private EmployeeStatus employeeStatus;
+    private EmployeeStatus status;
     private Department department;
     private Position position;
     
-    public static Employee create(UUID id, String name, Email email, LocalDate hireDate, EmployeeStatus employeeStatus, Department department, Position position) {
+    public static Employee create(UUID id, String name, Email email, LocalDate hireDate, EmployeeStatus status, Department department, Position position) {
         validateId(id);
         validateName(name);
         validateEmail(email);
         validateHireDate(hireDate);
-        validateEmployeeStatus(employeeStatus, hireDate);
+        validateStatus(status, hireDate);
         validateDepartment(department);
         validatePosition(position);
 
-        return new Employee(id, name, email, hireDate, employeeStatus, department, position);
+        return new Employee(id, name, email, hireDate, status, department, position);
     }
 
     private static void validateId(UUID id) {
@@ -75,11 +75,11 @@ public class Employee {
         }
     }
 
-    private static void validateEmployeeStatus(EmployeeStatus employeeStatus, LocalDate hireDate) {
-        if (employeeStatus == null) {
+    private static void validateStatus(EmployeeStatus status, LocalDate hireDate) {
+        if (status == null) {
             throw new IllegalArgumentException(messageSource.getMessage("validation.employee.status.null"));
         }
-        if (employeeStatus == EmployeeStatus.TERMINATED && hireDate != null && hireDate.isAfter(LocalDate.now())) {
+        if (status == EmployeeStatus.TERMINATED && hireDate != null && hireDate.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException(messageSource.getMessage("validation.employee.status.terminated.hiredate.future"));
         }
     }

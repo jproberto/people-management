@@ -1,4 +1,4 @@
-package com.itau.hr.people_management.domain.department.department;
+package com.itau.hr.people_management.domain.department.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,5 +11,5 @@ public interface DepartmentRepository {
     Optional<Department> findById(UUID id);
     void delete(Department department);
     List<Department> findAll();
-    List<Department> findByCostCenterCode(String costCenterCode);
+    Optional<Department> findByCostCenterCode(String costCenterCode);
 }

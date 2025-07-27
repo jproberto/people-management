@@ -21,7 +21,6 @@ public class DomainMessageSourceInitializer {
 
     @PostConstruct
     public void init() {
-        PositionLevel.setMessageSource(domainMessageSource);
         Department.setMessageSource(domainMessageSource);
         Position.setMessageSource(domainMessageSource);
         Employee.setMessageSource(domainMessageSource);

@@ -1,43 +1,29 @@
 package com.itau.hr.people_management.domain.position;
 
-import java.util.UUID;
-
 import com.itau.hr.people_management.domain.shared.DomainMessageSource;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+public enum PositionLevel {
+    JUNIOR("Júnior"),
+    PLENO("Pleno"),
+    SENIOR("Sênior");
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Getter
-@EqualsAndHashCode(of = "id")
-@ToString(of = {"id", "name"})
-public class PositionLevel {
-    private static DomainMessageSource messageSource;
-    public static void setMessageSource(DomainMessageSource ms) {
-        PositionLevel.messageSource = ms;
-    }
-    
-    private final UUID id;
-    private final String name;
+    private final String displayName;
 
-    public static PositionLevel create(UUID id, String name) {
-        validateId(id);
-        validateName(name);
-        return new PositionLevel(id, name);
+    PositionLevel(String displayName) {
+        this.displayName = displayName;
     }
 
-    private static void validateId(UUID id) {
-        if (id == null) {
-            throw new IllegalArgumentException(messageSource.getMessage("validation.positionlevel.id.null"));
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    // Método estático para validar se uma string corresponde a um PositionLevel válido
+    public static PositionLevel fromString(String text, DomainMessageSource messageSource) {
+        for (PositionLevel level : PositionLevel.values()) {
+            if (level.name().equalsIgnoreCase(text) || level.getDisplayName().equalsIgnoreCase(text)) {
+                return level;
+            }
         }
-    }
-
-    private static void validateName(String name) {
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException(messageSource.getMessage("validation.positionlevel.name.blank"));
-        }
+        throw new IllegalArgumentException(messageSource.getMessage("validation.positionlevel.invalid", text));
     }
 }
