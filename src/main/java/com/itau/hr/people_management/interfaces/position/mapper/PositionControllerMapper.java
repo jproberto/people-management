@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import com.itau.hr.people_management.application.position.dto.CreatePositionRequest;
 import com.itau.hr.people_management.application.position.dto.PositionResponse;
 import com.itau.hr.people_management.domain.position.PositionLevel;
-import com.itau.hr.people_management.domain.shared.DomainMessageSource;
+import com.itau.hr.people_management.domain.shared.message.DomainMessageSource;
 import com.itau.hr.people_management.interfaces.position.dto.PositionRequestDTO;
 import com.itau.hr.people_management.interfaces.position.dto.PositionResponseDTO;
 

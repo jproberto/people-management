@@ -17,4 +17,5 @@ public class SearchEmployeeRequest {
     private String departmentName;
     private UUID positionId;
     private String positionTitle;
+    private String positionLevel;
 }

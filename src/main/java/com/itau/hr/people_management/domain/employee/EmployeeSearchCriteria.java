@@ -13,11 +13,12 @@ import lombok.Setter;
 public class EmployeeSearchCriteria {
     private String name;
     private String emailAddress;
-    private EmployeeStatus status;
+    private EmployeeStatus employeeStatus;
     private UUID departmentId;
     private String departmentName;
     private UUID positionId;
     private String positionTitle;
+    private String positionLevel;
 
     public Optional<String> getName() {
         return Optional.ofNullable(name);
@@ -27,8 +28,8 @@ public class EmployeeSearchCriteria {
         return Optional.ofNullable(emailAddress);
     }
 
-    public Optional<EmployeeStatus> getStatus() {
-        return Optional.ofNullable(status);
+    public Optional<EmployeeStatus> getEmployeeStatus() {
+        return Optional.ofNullable(employeeStatus);
     }
 
     public Optional<UUID> getDepartmentId() {
@@ -45,5 +46,9 @@ public class EmployeeSearchCriteria {
 
     public Optional<String> getPositionTitle() {
         return Optional.ofNullable(positionTitle);
+    }
+
+    public Optional<String> getPositionLevel() {
+        return Optional.ofNullable(positionLevel);
     }
 }

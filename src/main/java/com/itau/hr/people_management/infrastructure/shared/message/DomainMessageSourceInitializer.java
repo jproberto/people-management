@@ -1,12 +1,13 @@
-package com.itau.hr.people_management.infrastructure.shared;
+package com.itau.hr.people_management.infrastructure.shared.message;
 
 import org.springframework.stereotype.Component;
 
 import com.itau.hr.people_management.domain.department.Department;
 import com.itau.hr.people_management.domain.employee.Employee;
 import com.itau.hr.people_management.domain.position.Position;
-import com.itau.hr.people_management.domain.shared.DomainMessageSource;
-import com.itau.hr.people_management.domain.shared.Email;
+import com.itau.hr.people_management.domain.shared.message.DomainMessageSource;
+import com.itau.hr.people_management.domain.shared.vo.Email;
+import com.itau.hr.people_management.interfaces.shared.exception_handler.GlobalExceptionHandler;
 
 import jakarta.annotation.PostConstruct;
 
@@ -24,5 +25,6 @@ public class DomainMessageSourceInitializer {
         Position.setMessageSource(domainMessageSource);
         Employee.setMessageSource(domainMessageSource);
         Email.setMessageSource(domainMessageSource);
+        GlobalExceptionHandler.setMessageSource(domainMessageSource);
     }
 }

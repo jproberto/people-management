@@ -5,8 +5,8 @@ import java.util.UUID;
 
 import com.itau.hr.people_management.domain.department.Department;
 import com.itau.hr.people_management.domain.position.Position;
-import com.itau.hr.people_management.domain.shared.DomainMessageSource;
-import com.itau.hr.people_management.domain.shared.Email;
+import com.itau.hr.people_management.domain.shared.message.DomainMessageSource;
+import com.itau.hr.people_management.domain.shared.vo.Email;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

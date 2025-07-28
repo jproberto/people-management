@@ -1,4 +1,4 @@
-package com.itau.hr.people_management.infrastructure.position;
+package com.itau.hr.people_management.infrastructure.position.repository;
 
 import java.util.List;
 import java.util.Optional;

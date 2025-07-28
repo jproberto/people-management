@@ -1,4 +1,4 @@
-package com.itau.hr.people_management.infrastructure.department;
+package com.itau.hr.people_management.infrastructure.department.repository;
 
 import java.util.Optional;
 import java.util.UUID;

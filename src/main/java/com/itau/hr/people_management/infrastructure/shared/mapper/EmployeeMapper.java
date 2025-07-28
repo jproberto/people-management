@@ -1,7 +1,7 @@
 package com.itau.hr.people_management.infrastructure.shared.mapper;
 
 import com.itau.hr.people_management.domain.employee.Employee;
-import com.itau.hr.people_management.domain.shared.Email;
+import com.itau.hr.people_management.domain.shared.vo.Email;
 import com.itau.hr.people_management.infrastructure.employee.entity.EmployeeJpaEntity;
 
 import lombok.AccessLevel;

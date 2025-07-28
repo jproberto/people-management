@@ -7,7 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.itau.hr.people_management.domain.employee.Employee;
 import com.itau.hr.people_management.domain.employee.repository.EmployeeRepository;
-import com.itau.hr.people_management.domain.shared.DomainMessageSource;
+import com.itau.hr.people_management.domain.shared.exception.NotFoundException;
+import com.itau.hr.people_management.domain.shared.message.DomainMessageSource;
 
 @Service
 @Transactional
@@ -26,7 +27,7 @@ public class DeleteEmployeeUseCase {
         }
 
         Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(messageSource.getMessage("error.employee.not.found", id)));
+                .orElseThrow(() -> new NotFoundException("error.employee.notfound", id));
 
         employeeRepository.delete(employee);
     }

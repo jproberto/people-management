@@ -7,10 +7,12 @@ import org.springframework.stereotype.Component;
 
 import com.itau.hr.people_management.application.employee.dto.CreateEmployeeRequest;
 import com.itau.hr.people_management.application.employee.dto.EmployeeResponse;
+import com.itau.hr.people_management.domain.employee.EmployeeSearchCriteria;
 import com.itau.hr.people_management.domain.employee.EmployeeStatus;
 import com.itau.hr.people_management.interfaces.department.mapper.DepartmentControllerMapper;
 import com.itau.hr.people_management.interfaces.employee.dto.EmployeeRequestDTO;
 import com.itau.hr.people_management.interfaces.employee.dto.EmployeeResponseDTO;
+import com.itau.hr.people_management.interfaces.employee.dto.EmployeeSearchRequestDTO;
 import com.itau.hr.people_management.interfaces.position.mapper.PositionControllerMapper;
 
 @Component
@@ -66,5 +68,22 @@ public class EmployeeControllerMapper {
         return applicationRequests.stream()
                 .map(this::toEmployeeResponseDTO)
                 .toList();
+    }
+
+    public EmployeeSearchCriteria toEmployeeSearchCriteria(EmployeeSearchRequestDTO apiRequestDTO) {
+        if (apiRequestDTO == null) {
+            return EmployeeSearchCriteria.builder().build();
+        }
+        return EmployeeSearchCriteria
+                .builder()
+                .name(apiRequestDTO.getName())
+                .emailAddress(apiRequestDTO.getEmailAddress())
+                .employeeStatus(apiRequestDTO.getStatus())
+                .departmentId(apiRequestDTO.getDepartmentId())
+                .departmentName(apiRequestDTO.getDepartment())
+                .positionId(apiRequestDTO.getPositionId())
+                .positionTitle(apiRequestDTO.getPosition())
+                .positionLevel(apiRequestDTO.getPositionLevel())
+                .build();
     }
 }

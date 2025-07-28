@@ -1,6 +1,6 @@
 package com.itau.hr.people_management.domain.position;
 
-import com.itau.hr.people_management.domain.shared.DomainMessageSource;
+import com.itau.hr.people_management.domain.shared.message.DomainMessageSource;
 
 public enum PositionLevel {
     JUNIOR("Júnior"),

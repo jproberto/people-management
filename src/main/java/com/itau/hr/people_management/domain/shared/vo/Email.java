@@ -1,4 +1,6 @@
-package com.itau.hr.people_management.domain.shared;
+package com.itau.hr.people_management.domain.shared.vo;
+
+import com.itau.hr.people_management.domain.shared.message.DomainMessageSource;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

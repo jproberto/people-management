@@ -1,10 +1,10 @@
-package com.itau.hr.people_management.infrastructure.shared;
+package com.itau.hr.people_management.infrastructure.shared.message;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 
-import com.itau.hr.people_management.domain.shared.DomainMessageSource;
+import com.itau.hr.people_management.domain.shared.message.DomainMessageSource;
 
 @Component
 public class SpringDomainMessageSource implements DomainMessageSource {

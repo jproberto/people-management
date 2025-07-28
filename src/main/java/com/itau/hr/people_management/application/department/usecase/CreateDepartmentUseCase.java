@@ -8,7 +8,7 @@ import com.itau.hr.people_management.application.department.dto.CreateDepartment
 import com.itau.hr.people_management.application.department.dto.DepartmentResponse;
 import com.itau.hr.people_management.domain.department.Department;
 import com.itau.hr.people_management.domain.department.repository.DepartmentRepository;
-import com.itau.hr.people_management.domain.shared.DomainMessageSource;
+import com.itau.hr.people_management.domain.shared.exception.ConflictException;
 
 import jakarta.transaction.Transactional;
 
@@ -16,16 +16,14 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class CreateDepartmentUseCase {
     private final DepartmentRepository departmentRepository;
-    private final DomainMessageSource messageSource;
 
-    public CreateDepartmentUseCase(DepartmentRepository departmentRepository, DomainMessageSource messageSource) {
+    public CreateDepartmentUseCase(DepartmentRepository departmentRepository) {
         this.departmentRepository = departmentRepository;
-        this.messageSource = messageSource;
     }
 
     public DepartmentResponse execute(CreateDepartmentRequest request) {
         if (departmentRepository.findByCostCenterCode(request.getCostCenterCode()).isPresent()) {
-            throw new IllegalArgumentException(messageSource.getMessage("error.department.costcenter.exists", request.getCostCenterCode()));
+            throw new ConflictException("error.department.costcenter.exists", request.getCostCenterCode());
         }
 
         Department department = Department.create(

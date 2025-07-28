@@ -12,8 +12,9 @@ import com.itau.hr.people_management.domain.employee.Employee;
 import com.itau.hr.people_management.domain.employee.EmployeeStatus;
 import com.itau.hr.people_management.domain.employee.repository.EmployeeRepository;
 import com.itau.hr.people_management.domain.position.repository.PositionRepository;
-import com.itau.hr.people_management.domain.shared.DomainMessageSource;
-import com.itau.hr.people_management.domain.shared.Email;
+import com.itau.hr.people_management.domain.shared.exception.ConflictException;
+import com.itau.hr.people_management.domain.shared.exception.NotFoundException;
+import com.itau.hr.people_management.domain.shared.vo.Email;
 
 @Service
 @Transactional
@@ -21,29 +22,27 @@ public class CreateEmployeeUseCase {
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
     private final PositionRepository positionRepository;
-    private final DomainMessageSource messageSource;
 
-    public CreateEmployeeUseCase(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository, PositionRepository positionRepository, DomainMessageSource messageSource) {
+    public CreateEmployeeUseCase(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository, PositionRepository positionRepository) {
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
         this.positionRepository = positionRepository;
-        this.messageSource = messageSource;
     }
 
     public EmployeeResponse execute(CreateEmployeeRequest request) {
         if (employeeRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new IllegalArgumentException(messageSource.getMessage("employee.email.already.exists", request.getEmail()));
+            throw new ConflictException("error.employee.email.exists", request.getEmail());
         }
 
         var department = findOrThrow(
             departmentRepository.findById(request.getDepartmentId()),
-            "validation.employee.department.notfound",
+            "error.department.notfound",
             request.getDepartmentId()
         );
 
         var position = findOrThrow(
             positionRepository.findById(request.getPositionId()),
-            "validation.employee.position.notfound",
+            "error.position.notfound",
             request.getPositionId()
         );
 
@@ -63,6 +62,6 @@ public class CreateEmployeeUseCase {
     }
 
     private <T> T findOrThrow(java.util.Optional<T> optional, String messageKey, Object... args) {
-        return optional.orElseThrow(() -> new IllegalArgumentException(messageSource.getMessage(messageKey, args)));
+        return optional.orElseThrow(() -> new NotFoundException(messageKey, args));
     }
 }

@@ -2,7 +2,7 @@ package com.itau.hr.people_management.domain.position;
 
 import java.util.UUID;
 
-import com.itau.hr.people_management.domain.shared.DomainMessageSource;
+import com.itau.hr.people_management.domain.shared.message.DomainMessageSource;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

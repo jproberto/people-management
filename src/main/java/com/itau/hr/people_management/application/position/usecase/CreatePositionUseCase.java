@@ -9,7 +9,8 @@ import com.itau.hr.people_management.application.position.dto.PositionResponse;
 import com.itau.hr.people_management.domain.position.Position;
 import com.itau.hr.people_management.domain.position.PositionLevel;
 import com.itau.hr.people_management.domain.position.repository.PositionRepository;
-import com.itau.hr.people_management.domain.shared.DomainMessageSource;
+import com.itau.hr.people_management.domain.shared.exception.ConflictException;
+import com.itau.hr.people_management.domain.shared.message.DomainMessageSource;
 
 import jakarta.transaction.Transactional;
 
@@ -26,12 +27,9 @@ public class CreatePositionUseCase {
 
     public PositionResponse execute(CreatePositionRequest request) {
         PositionLevel positionLevel = PositionLevel.fromString(request.getPositionLevelName(), messageSource);
-        if (positionLevel == null) {
-            throw new IllegalArgumentException(messageSource.getMessage("validation.positionlevel.name.blank"));
-        }
-
+        
         if (positionRepository.findByTitleAndPositionLevel(request.getTitle(), positionLevel).isPresent()) {
-            throw new IllegalArgumentException(messageSource.getMessage("error.position.title.positionlevel.exists", request.getTitle()));
+            throw new ConflictException("error.position.title.positionlevel.exists", request.getTitle(), positionLevel.getDisplayName());
         }
 
         Position position = Position.create(

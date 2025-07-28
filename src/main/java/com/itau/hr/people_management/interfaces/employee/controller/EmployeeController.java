@@ -18,8 +18,11 @@ import com.itau.hr.people_management.application.employee.dto.EmployeeResponse;
 import com.itau.hr.people_management.application.employee.usecase.CreateEmployeeUseCase;
 import com.itau.hr.people_management.application.employee.usecase.DeleteEmployeeUseCase;
 import com.itau.hr.people_management.application.employee.usecase.GetEmployeeUseCase;
+import com.itau.hr.people_management.application.employee.usecase.SearchEmployeeUseCase;
+import com.itau.hr.people_management.domain.employee.EmployeeSearchCriteria;
 import com.itau.hr.people_management.interfaces.employee.dto.EmployeeRequestDTO;
 import com.itau.hr.people_management.interfaces.employee.dto.EmployeeResponseDTO;
+import com.itau.hr.people_management.interfaces.employee.dto.EmployeeSearchRequestDTO;
 import com.itau.hr.people_management.interfaces.employee.mapper.EmployeeControllerMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,15 +40,18 @@ public class EmployeeController {
     private final GetEmployeeUseCase getEmployeeUseCase;
     private final CreateEmployeeUseCase createEmployeeUseCase;
     private final DeleteEmployeeUseCase deleteEmployeeUseCase;
+    private final SearchEmployeeUseCase getEmployeesByCriteriaUseCase;
     private final EmployeeControllerMapper employeeControllerMapper;
 
     public EmployeeController(GetEmployeeUseCase getEmployeeUseCase,
                               CreateEmployeeUseCase createEmployeeUseCase,
                               DeleteEmployeeUseCase deleteEmployeeUseCase,
+                              SearchEmployeeUseCase getEmployeesByCriteriaUseCase,
                               EmployeeControllerMapper employeeControllerMapper) {
         this.getEmployeeUseCase = getEmployeeUseCase;
         this.createEmployeeUseCase = createEmployeeUseCase;
         this.deleteEmployeeUseCase = deleteEmployeeUseCase;
+        this.getEmployeesByCriteriaUseCase = getEmployeesByCriteriaUseCase;
         this.employeeControllerMapper = employeeControllerMapper;
     }
 
@@ -58,6 +64,17 @@ public class EmployeeController {
         List<EmployeeResponse> applicationResponses = getEmployeeUseCase.getAll();
         List<EmployeeResponseDTO> responseDTOs = employeeControllerMapper.toEmployeeResponseDTOList(applicationResponses);
         return ResponseEntity.status(HttpStatus.OK).body(responseDTOs);
+    }
+
+    @Operation(summary = "Get employee by ID", description = "Retrieves an employee by their unique identifier")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved employee",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = EmployeeResponseDTO.class)))
+    @GetMapping("/{id}")
+    public ResponseEntity<EmployeeResponseDTO> getEmployee(@PathVariable("id") UUID id) {
+        EmployeeResponse applicationResponse = getEmployeeUseCase.getById(id);
+        EmployeeResponseDTO responseDTO = employeeControllerMapper.toEmployeeResponseDTO(applicationResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 
     @Operation(summary = "Create a new employee", description = "Creates a new employee with the provided details, linking to existing department and position.")
@@ -86,5 +103,19 @@ public class EmployeeController {
     public ResponseEntity<Void> deleteEmployee(@PathVariable UUID id) {
         deleteEmployeeUseCase.execute(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Search employees by criteria", description = "Retrieves a list of employees filtered by specified criteria, e.g., department name, position, etc.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved filtered list of employees",
+                content = @Content(mediaType = "application/json",
+                                array = @ArraySchema(schema = @Schema(implementation = EmployeeResponseDTO.class))))
+    @ApiResponse(responseCode = "400", description = "Invalid search parameters supplied",
+                content = @Content(mediaType = "application/json"))
+    @GetMapping("/search")
+    public ResponseEntity<List<EmployeeResponseDTO>> searchEmployees(@Valid EmployeeSearchRequestDTO searchRequestDTO) {
+        EmployeeSearchCriteria  employeeSearchCriteria  = employeeControllerMapper.toEmployeeSearchCriteria (searchRequestDTO);
+        List<EmployeeResponse> applicationResponses = getEmployeesByCriteriaUseCase.execute(employeeSearchCriteria);
+        List<EmployeeResponseDTO> responseDTOs = employeeControllerMapper.toEmployeeResponseDTOList(applicationResponses);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTOs);
     }
 }

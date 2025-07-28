@@ -1,4 +1,4 @@
-package com.itau.hr.people_management.infrastructure.employee;
+package com.itau.hr.people_management.infrastructure.employee.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +10,7 @@ import com.itau.hr.people_management.domain.employee.Employee;
 import com.itau.hr.people_management.domain.employee.EmployeeSearchCriteria;
 import com.itau.hr.people_management.domain.employee.repository.EmployeeRepository;
 import com.itau.hr.people_management.infrastructure.employee.entity.EmployeeJpaEntity;
+import com.itau.hr.people_management.infrastructure.employee.specification.EmployeeSpecification;
 import com.itau.hr.people_management.infrastructure.shared.mapper.EmployeeMapper;
 
 @Component
@@ -48,16 +49,10 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 
     @Override
     public List<Employee> search(EmployeeSearchCriteria criteria) {
-        return jpaEmployeeRepository.searchEmployees(
-                criteria.getName().orElse(null),
-                criteria.getEmailAddress().orElse(null),
-                criteria.getStatus().orElse(null),
-                criteria.getDepartmentId().orElse(null),
-                criteria.getPositionId().orElse(null)
-        ).stream()
-         .map(EmployeeMapper::toDomainEntity)
-         .toList()
-        ;
+        List<EmployeeJpaEntity> jpaEntities = jpaEmployeeRepository.findAll(EmployeeSpecification.search(criteria));
+        return jpaEntities.stream()
+                .map(EmployeeMapper::toDomainEntity)
+                .toList();
     }
 
     @Override
