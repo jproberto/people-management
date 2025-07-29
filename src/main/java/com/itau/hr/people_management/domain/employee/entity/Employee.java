@@ -82,9 +82,6 @@ public class Employee {
         if (status == null) {
             throw new IllegalArgumentException(messageSource.getMessage("validation.employee.status.null"));
         }
-        if (status == EmployeeStatus.TERMINATED && hireDate != null && hireDate.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException(messageSource.getMessage("validation.employee.status.terminated.hiredate.future"));
-        }
     }
 
     private static void validateDepartment(Department department) {
