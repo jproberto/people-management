@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 
 import com.itau.hr.people_management.application.position.dto.CreatePositionRequest;
 import com.itau.hr.people_management.application.position.dto.PositionResponse;
-import com.itau.hr.people_management.domain.position.Position;
-import com.itau.hr.people_management.domain.position.PositionLevel;
+import com.itau.hr.people_management.domain.position.entity.Position;
+import com.itau.hr.people_management.domain.position.enumeration.PositionLevel;
 import com.itau.hr.people_management.domain.position.repository.PositionRepository;
 import com.itau.hr.people_management.domain.shared.exception.ConflictException;
 import com.itau.hr.people_management.domain.shared.message.DomainMessageSource;

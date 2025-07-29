@@ -2,7 +2,7 @@ package com.itau.hr.people_management.interfaces.position.dto;
 
 import java.util.UUID;
 
-import com.itau.hr.people_management.domain.position.PositionLevel;
+import com.itau.hr.people_management.domain.position.enumeration.PositionLevel;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

@@ -2,7 +2,7 @@ package com.itau.hr.people_management.application.position.dto;
 
 import java.util.UUID;
 
-import com.itau.hr.people_management.domain.position.Position;
+import com.itau.hr.people_management.domain.position.entity.Position;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

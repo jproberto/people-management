@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.itau.hr.people_management.domain.position.PositionLevel;
+import com.itau.hr.people_management.domain.position.enumeration.PositionLevel;
 import com.itau.hr.people_management.infrastructure.position.entity.PositionJpaEntity;
 
 @Repository

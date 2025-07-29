@@ -3,10 +3,10 @@ package com.itau.hr.people_management.domain.employee.entity;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import com.itau.hr.people_management.domain.department.Department;
+import com.itau.hr.people_management.domain.department.entity.Department;
 import com.itau.hr.people_management.domain.employee.enumeration.EmployeeStatus;
 import com.itau.hr.people_management.domain.employee.event.EmployeeStatusChangedEvent;
-import com.itau.hr.people_management.domain.position.Position;
+import com.itau.hr.people_management.domain.position.entity.Position;
 import com.itau.hr.people_management.domain.shared.message.DomainMessageSource;
 import com.itau.hr.people_management.domain.shared.vo.Email;
 import com.itau.hr.people_management.infrastructure.outbox.holder.DomainEventsHolder;
@@ -40,7 +40,7 @@ public class Employee {
         validateName(name);
         validateEmail(email);
         validateHireDate(hireDate);
-        validateStatus(status, hireDate);
+        validateStatus(status);
         validateDepartment(department);
         validatePosition(position);
 
@@ -78,7 +78,7 @@ public class Employee {
         }
     }
 
-    private static void validateStatus(EmployeeStatus status, LocalDate hireDate) {
+    private static void validateStatus(EmployeeStatus status) {
         if (status == null) {
             throw new IllegalArgumentException(messageSource.getMessage("validation.employee.status.null"));
         }

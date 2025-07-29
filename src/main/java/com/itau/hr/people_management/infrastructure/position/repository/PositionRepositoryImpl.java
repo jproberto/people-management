@@ -6,8 +6,8 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-import com.itau.hr.people_management.domain.position.Position;
-import com.itau.hr.people_management.domain.position.PositionLevel;
+import com.itau.hr.people_management.domain.position.entity.Position;
+import com.itau.hr.people_management.domain.position.enumeration.PositionLevel;
 import com.itau.hr.people_management.domain.position.repository.PositionRepository;
 import com.itau.hr.people_management.infrastructure.position.entity.PositionJpaEntity;
 import com.itau.hr.people_management.infrastructure.shared.mapper.PositionMapper;

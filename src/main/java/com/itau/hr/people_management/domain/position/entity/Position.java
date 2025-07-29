@@ -1,7 +1,8 @@
-package com.itau.hr.people_management.domain.position;
+package com.itau.hr.people_management.domain.position.entity;
 
 import java.util.UUID;
 
+import com.itau.hr.people_management.domain.position.enumeration.PositionLevel;
 import com.itau.hr.people_management.domain.shared.message.DomainMessageSource;
 
 import lombok.AccessLevel;

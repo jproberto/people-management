@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.itau.hr.people_management.application.department.dto.CreateDepartmentRequest;
 import com.itau.hr.people_management.application.department.dto.DepartmentResponse;
-import com.itau.hr.people_management.domain.department.Department;
+import com.itau.hr.people_management.domain.department.entity.Department;
 import com.itau.hr.people_management.domain.department.repository.DepartmentRepository;
 import com.itau.hr.people_management.domain.shared.exception.ConflictException;
 

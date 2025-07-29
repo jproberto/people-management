@@ -1,4 +1,4 @@
-package com.itau.hr.people_management.domain.department;
+package com.itau.hr.people_management.domain.department.entity;
 
 import java.util.UUID;
 

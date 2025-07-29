@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.itau.hr.people_management.domain.department.Department;
+import com.itau.hr.people_management.domain.department.entity.Department;
 
 public interface DepartmentRepository {
     Department save(Department department);

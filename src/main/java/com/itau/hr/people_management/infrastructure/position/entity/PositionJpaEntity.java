@@ -2,7 +2,7 @@ package com.itau.hr.people_management.infrastructure.position.entity;
 
 import java.util.UUID;
 
-import com.itau.hr.people_management.domain.position.PositionLevel;
+import com.itau.hr.people_management.domain.position.enumeration.PositionLevel;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

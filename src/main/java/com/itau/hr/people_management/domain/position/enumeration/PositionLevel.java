@@ -1,4 +1,4 @@
-package com.itau.hr.people_management.domain.position;
+package com.itau.hr.people_management.domain.position.enumeration;
 
 import com.itau.hr.people_management.domain.shared.message.DomainMessageSource;
 

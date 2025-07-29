@@ -445,6 +445,7 @@ class EmployeeCreatedEventTest {
             assertThat(event.equals(null), is(false));
         }
 
+        @SuppressWarnings("unlikely-arg-type")
         @Test
         @DisplayName("Should not be equal to different class")
         void shouldNotBeEqualToDifferentClass() {

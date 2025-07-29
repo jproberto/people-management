@@ -29,10 +29,10 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.itau.hr.people_management.domain.department.Department;
+import com.itau.hr.people_management.domain.department.entity.Department;
 import com.itau.hr.people_management.domain.employee.enumeration.EmployeeStatus;
 import com.itau.hr.people_management.domain.employee.event.EmployeeStatusChangedEvent;
-import com.itau.hr.people_management.domain.position.Position;
+import com.itau.hr.people_management.domain.position.entity.Position;
 import com.itau.hr.people_management.domain.shared.message.DomainMessageSource;
 import com.itau.hr.people_management.domain.shared.vo.Email;
 import com.itau.hr.people_management.infrastructure.outbox.holder.DomainEventsHolder;
@@ -42,7 +42,7 @@ import com.itau.hr.people_management.infrastructure.outbox.holder.DomainEventsHo
 class EmployeeTest {
 
     @Mock
-    private static DomainMessageSource messageSource;
+    private DomainMessageSource messageSource;
 
     @Mock
     private Email email;

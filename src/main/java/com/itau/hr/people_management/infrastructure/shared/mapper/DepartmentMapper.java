@@ -1,6 +1,6 @@
 package com.itau.hr.people_management.infrastructure.shared.mapper;
 
-import com.itau.hr.people_management.domain.department.Department;
+import com.itau.hr.people_management.domain.department.entity.Department;
 import com.itau.hr.people_management.infrastructure.department.entity.DepartmentJpaEntity;
 
 import lombok.NoArgsConstructor;

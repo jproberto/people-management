@@ -2,7 +2,7 @@ package com.itau.hr.people_management.application.department.dto;
 
 import java.util.UUID;
 
-import com.itau.hr.people_management.domain.department.Department;
+import com.itau.hr.people_management.domain.department.entity.Department;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

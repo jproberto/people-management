@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-import com.itau.hr.people_management.domain.department.Department;
+import com.itau.hr.people_management.domain.department.entity.Department;
 import com.itau.hr.people_management.domain.department.repository.DepartmentRepository;
 import com.itau.hr.people_management.infrastructure.department.entity.DepartmentJpaEntity;
 import com.itau.hr.people_management.infrastructure.shared.mapper.DepartmentMapper;

@@ -28,11 +28,13 @@ public class Email {
         if (address == null || address.isBlank()) {
             throw new IllegalArgumentException(messageSource.getMessage("validation.email.address.blank"));
         }
-        if (!address.matches("^[\\w-\\.]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
-            throw new IllegalArgumentException(messageSource.getMessage("validation.email.address.invalid"));
+        if (address.length() < 6 || address.length() > 100) {
+            throw new IllegalArgumentException(messageSource.getMessage("validation.email.address.length", 6, 100));
         }
-        if (address.length() < 5 || address.length() > 100) {
-            throw new IllegalArgumentException(messageSource.getMessage("validation.email.address.length", 5, 100));
+    
+        String emailRegex = "^[a-zA-Z0-9](?:[a-zA-Z0-9._+-]*[a-zA-Z0-9])?@[a-zA-Z0-9](?:[a-zA-Z0-9.-]*[a-zA-Z0-9])?\\.[a-zA-Z]{2,}$";
+        if (!address.matches(emailRegex)) {
+            throw new IllegalArgumentException(messageSource.getMessage("validation.email.address.invalid"));
         }
     }
 }
