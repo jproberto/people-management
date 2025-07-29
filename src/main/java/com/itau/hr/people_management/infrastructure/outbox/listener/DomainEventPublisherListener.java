@@ -5,8 +5,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionalEventListener;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import com.itau.hr.people_management.domain.shared.event.DomainEvent;
 import com.itau.hr.people_management.infrastructure.outbox.holder.DomainEventsHolder;
@@ -23,6 +25,7 @@ public class DomainEventPublisherListener {
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void handleDomainEventsAfterCommit(TransactionCompletedEvent event) {
         List<DomainEvent> events = DomainEventsHolder.getAndClearEvents();
 

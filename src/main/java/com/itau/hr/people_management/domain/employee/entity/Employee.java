@@ -123,9 +123,6 @@ public class Employee {
         if (newStatus == null) {
             throw new IllegalArgumentException(messageSource.getMessage("validation.employee.status.null"));
         }
-        if (this.status == newStatus) {
-            return;
-        }
         if (this.status == EmployeeStatus.TERMINATED) {
             throw new IllegalArgumentException(messageSource.getMessage("validation.employee.old.status.terminated"));
         }

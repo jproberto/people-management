@@ -65,6 +65,8 @@ public class OutboxEventPublisher implements EventPublisher {
 
         } catch (JsonProcessingException e) {
             throw new OutboxEventSerializationException("Failed to serialize event of type " + event.getClass().getName() + " with ID " + event.getEventId() + " to JSON for outbox", e);
+        } catch (Exception e) {
+            log.error("Failed to publish event of type " + event.getClass().getName() + " with ID " + event.getEventId() + " to outbox", e);
         }
     }
 }
