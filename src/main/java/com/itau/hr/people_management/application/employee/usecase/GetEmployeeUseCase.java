@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.itau.hr.people_management.application.employee.dto.EmployeeResponse;
-import com.itau.hr.people_management.domain.employee.Employee;
+import com.itau.hr.people_management.domain.employee.entity.Employee;
 import com.itau.hr.people_management.domain.employee.repository.EmployeeRepository;
 import com.itau.hr.people_management.domain.shared.exception.NotFoundException;
 import com.itau.hr.people_management.domain.shared.message.DomainMessageSource;

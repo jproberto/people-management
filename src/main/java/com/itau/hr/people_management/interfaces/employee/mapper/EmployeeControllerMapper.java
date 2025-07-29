@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 
 import com.itau.hr.people_management.application.employee.dto.CreateEmployeeRequest;
 import com.itau.hr.people_management.application.employee.dto.EmployeeResponse;
-import com.itau.hr.people_management.domain.employee.EmployeeSearchCriteria;
-import com.itau.hr.people_management.domain.employee.EmployeeStatus;
+import com.itau.hr.people_management.domain.employee.criteria.EmployeeSearchCriteria;
+import com.itau.hr.people_management.domain.employee.enumeration.EmployeeStatus;
 import com.itau.hr.people_management.interfaces.department.mapper.DepartmentControllerMapper;
 import com.itau.hr.people_management.interfaces.employee.dto.EmployeeRequestDTO;
 import com.itau.hr.people_management.interfaces.employee.dto.EmployeeResponseDTO;

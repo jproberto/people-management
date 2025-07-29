@@ -41,10 +41,12 @@
     </appender>
 
     <root level="INFO">
-        <appender-ref ref="CONSOLE_JSON" /> <appender-ref ref="FILE_JSON" />    </root>
+        <appender-ref ref="CONSOLE_JSON" /> <appender-ref ref="FILE_JSON" />    
+    </root>
 
     <logger name="com.itau.hr.people_management" level="DEBUG"/>
     <logger name="org.springframework" level="INFO"/>
     <logger name="org.hibernate" level="INFO"/>
+     <logger name="org.springframework.kafka" level="INFO"/>
 
 </configuration>

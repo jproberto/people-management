@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.itau.hr.people_management.domain.employee.Employee;
-import com.itau.hr.people_management.domain.employee.EmployeeSearchCriteria;
+import com.itau.hr.people_management.domain.employee.criteria.EmployeeSearchCriteria;
+import com.itau.hr.people_management.domain.employee.entity.Employee;
 
 public interface EmployeeRepository {
     Employee save(Employee employee);

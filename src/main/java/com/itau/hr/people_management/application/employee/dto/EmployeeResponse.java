@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.itau.hr.people_management.application.department.dto.DepartmentResponse;
 import com.itau.hr.people_management.application.position.dto.PositionResponse;
-import com.itau.hr.people_management.domain.employee.Employee;
+ import com.itau.hr.people_management.domain.employee.entity.Employee;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

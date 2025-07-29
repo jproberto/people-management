@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import com.itau.hr.people_management.domain.employee.EmployeeSearchCriteria;
+import com.itau.hr.people_management.domain.employee.criteria.EmployeeSearchCriteria;
 import com.itau.hr.people_management.infrastructure.department.entity.DepartmentJpaEntity;
 import com.itau.hr.people_management.infrastructure.employee.entity.EmployeeJpaEntity;
 import com.itau.hr.people_management.infrastructure.position.entity.PositionJpaEntity;

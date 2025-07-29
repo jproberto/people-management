@@ -6,8 +6,8 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-import com.itau.hr.people_management.domain.employee.Employee;
-import com.itau.hr.people_management.domain.employee.EmployeeSearchCriteria;
+import com.itau.hr.people_management.domain.employee.criteria.EmployeeSearchCriteria;
+import com.itau.hr.people_management.domain.employee.entity.Employee;
 import com.itau.hr.people_management.domain.employee.repository.EmployeeRepository;
 import com.itau.hr.people_management.infrastructure.employee.entity.EmployeeJpaEntity;
 import com.itau.hr.people_management.infrastructure.employee.specification.EmployeeSpecification;

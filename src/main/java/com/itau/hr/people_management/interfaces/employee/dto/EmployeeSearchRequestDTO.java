@@ -2,7 +2,7 @@ package com.itau.hr.people_management.interfaces.employee.dto;
 
 import java.util.UUID;
 
-import com.itau.hr.people_management.domain.employee.EmployeeStatus;
+import com.itau.hr.people_management.domain.employee.enumeration.EmployeeStatus;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;

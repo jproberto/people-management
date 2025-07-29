@@ -8,8 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.itau.hr.people_management.application.employee.dto.CreateEmployeeRequest;
 import com.itau.hr.people_management.application.employee.dto.EmployeeResponse;
 import com.itau.hr.people_management.domain.department.repository.DepartmentRepository;
-import com.itau.hr.people_management.domain.employee.Employee;
-import com.itau.hr.people_management.domain.employee.EmployeeStatus;
+import com.itau.hr.people_management.domain.employee.entity.Employee;
+import com.itau.hr.people_management.domain.employee.enumeration.EmployeeStatus;
+import com.itau.hr.people_management.domain.employee.event.EmployeeCreatedEvent;
+import com.itau.hr.people_management.domain.employee.event.EventPublisher;
 import com.itau.hr.people_management.domain.employee.repository.EmployeeRepository;
 import com.itau.hr.people_management.domain.position.repository.PositionRepository;
 import com.itau.hr.people_management.domain.shared.exception.ConflictException;
@@ -22,11 +24,13 @@ public class CreateEmployeeUseCase {
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
     private final PositionRepository positionRepository;
+    private final EventPublisher eventPublisher;
 
-    public CreateEmployeeUseCase(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository, PositionRepository positionRepository) {
+    public CreateEmployeeUseCase(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository, PositionRepository positionRepository, EventPublisher eventPublisher) {
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
         this.positionRepository = positionRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     public EmployeeResponse execute(CreateEmployeeRequest request) {
@@ -57,6 +61,12 @@ public class CreateEmployeeUseCase {
                             );
 
         Employee savedEmployee = employeeRepository.save(employee);
+
+        eventPublisher.publish(new EmployeeCreatedEvent(
+                                    savedEmployee.getId(),
+                                    savedEmployee.getName(),
+                                    savedEmployee.getEmail().getAddress()
+                                ));
 
         return new EmployeeResponse(savedEmployee);
     }

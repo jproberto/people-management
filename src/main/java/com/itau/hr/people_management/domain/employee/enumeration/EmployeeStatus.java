@@ -1,4 +1,4 @@
-package com.itau.hr.people_management.domain.employee;
+package com.itau.hr.people_management.domain.employee.enumeration;
 
 public enum EmployeeStatus {
     ACTIVE,         // Ativo

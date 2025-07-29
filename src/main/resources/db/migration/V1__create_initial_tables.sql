@@ -26,3 +26,33 @@ CREATE TABLE IF NOT EXISTS employees (
     FOREIGN KEY (department_id) REFERENCES departments(id),
     FOREIGN KEY (position_id) REFERENCES positions(id)
 );
+
+-- Tabela para armazenar mensagens do Outbox Relay
+CREATE TABLE outbox_messages (
+    id UUID PRIMARY KEY,
+    occurred_on TIMESTAMP WITH TIME ZONE NOT NULL,
+    aggregate_type VARCHAR(255) NOT NULL,
+    aggregate_id UUID,
+    event_type VARCHAR(255) NOT NULL,
+    payload TEXT NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    processed_at TIMESTAMP WITH TIME ZONE,
+    retry_attempts INT NOT NULL DEFAULT 0,
+    next_attempt_at TIMESTAMP WITH TIME ZONE
+);
+
+CREATE INDEX idx_outbox_status_occurred_on ON outbox_messages (status, occurred_on);
+CREATE INDEX idx_outbox_next_attempt ON outbox_messages (next_attempt_at);
+
+-- Tabela para os eventos de funcionários
+CREATE TABLE employee_events_history (
+    id UUID PRIMARY KEY,
+    employee_id UUID NOT NULL,
+    event_type VARCHAR(255) NOT NULL,
+    occurred_on TIMESTAMP WITH TIME ZONE NOT NULL,
+    description VARCHAR(1000) NOT NULL,
+    event_data TEXT NOT NULL
+);
+
+CREATE INDEX idx_employee_id ON employee_events_history (employee_id);
+CREATE INDEX idx_event_type ON employee_events_history (event_type);

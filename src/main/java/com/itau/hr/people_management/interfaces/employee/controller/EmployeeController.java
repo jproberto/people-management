@@ -7,19 +7,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.itau.hr.people_management.application.employee.dto.ChangeEmployeeStatusRequest;
 import com.itau.hr.people_management.application.employee.dto.CreateEmployeeRequest;
 import com.itau.hr.people_management.application.employee.dto.EmployeeResponse;
+import com.itau.hr.people_management.application.employee.usecase.ChangeEmployeeStatusUseCase;
 import com.itau.hr.people_management.application.employee.usecase.CreateEmployeeUseCase;
 import com.itau.hr.people_management.application.employee.usecase.DeleteEmployeeUseCase;
 import com.itau.hr.people_management.application.employee.usecase.GetEmployeeUseCase;
+import com.itau.hr.people_management.application.employee.usecase.ReactivateEmployeeUseCase;
 import com.itau.hr.people_management.application.employee.usecase.SearchEmployeeUseCase;
-import com.itau.hr.people_management.domain.employee.EmployeeSearchCriteria;
+import com.itau.hr.people_management.domain.employee.criteria.EmployeeSearchCriteria;
 import com.itau.hr.people_management.interfaces.employee.dto.EmployeeRequestDTO;
 import com.itau.hr.people_management.interfaces.employee.dto.EmployeeResponseDTO;
 import com.itau.hr.people_management.interfaces.employee.dto.EmployeeSearchRequestDTO;
@@ -41,17 +45,23 @@ public class EmployeeController {
     private final CreateEmployeeUseCase createEmployeeUseCase;
     private final DeleteEmployeeUseCase deleteEmployeeUseCase;
     private final SearchEmployeeUseCase getEmployeesByCriteriaUseCase;
+    private final ChangeEmployeeStatusUseCase changeEmployeeStatusUseCase;
+    private final ReactivateEmployeeUseCase reactivateEmployeeUseCase;
     private final EmployeeControllerMapper employeeControllerMapper;
 
     public EmployeeController(GetEmployeeUseCase getEmployeeUseCase,
                               CreateEmployeeUseCase createEmployeeUseCase,
                               DeleteEmployeeUseCase deleteEmployeeUseCase,
                               SearchEmployeeUseCase getEmployeesByCriteriaUseCase,
+                              ChangeEmployeeStatusUseCase changeEmployeeStatusUseCase,
+                              ReactivateEmployeeUseCase reactivateEmployeeUseCase,
                               EmployeeControllerMapper employeeControllerMapper) {
         this.getEmployeeUseCase = getEmployeeUseCase;
         this.createEmployeeUseCase = createEmployeeUseCase;
         this.deleteEmployeeUseCase = deleteEmployeeUseCase;
         this.getEmployeesByCriteriaUseCase = getEmployeesByCriteriaUseCase;
+        this.changeEmployeeStatusUseCase = changeEmployeeStatusUseCase;
+        this.reactivateEmployeeUseCase = reactivateEmployeeUseCase;
         this.employeeControllerMapper = employeeControllerMapper;
     }
 
@@ -117,5 +127,25 @@ public class EmployeeController {
         List<EmployeeResponse> applicationResponses = getEmployeesByCriteriaUseCase.execute(employeeSearchCriteria);
         List<EmployeeResponseDTO> responseDTOs = employeeControllerMapper.toEmployeeResponseDTOList(applicationResponses);
         return ResponseEntity.status(HttpStatus.OK).body(responseDTOs);
+    }
+
+    @Operation(summary = "Change employee status", description = "Changes the status of an employee to a new status (e.g., ACTIVE, INACTIVE, TERMINATED)")
+    @ApiResponse(responseCode = "204", description = "Employee status changed successfully (No content)")
+    @ApiResponse(responseCode = "404", description = "Employee not found with the provided ID",
+            content = @Content(mediaType = "application/json"))
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Void> changeEmployeeStatus(@PathVariable UUID id, @Valid @RequestBody ChangeEmployeeStatusRequest request) {
+        changeEmployeeStatusUseCase.execute(id, request.newStatus());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); 
+    }
+
+    @Operation(summary = "Reactivate an employee", description = "Reactivates an employee who has been previously terminated")
+    @ApiResponse(responseCode = "204", description = "Employee reactivated successfully (No content)")
+    @ApiResponse(responseCode = "404", description = "Employee not found with the provided ID",
+            content = @Content(mediaType = "application/json"))
+    @PostMapping("/{id}/reactivate")
+    public ResponseEntity<Void> reactivateEmployee(@PathVariable UUID id) {
+        reactivateEmployeeUseCase.execute(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); 
     }
 }

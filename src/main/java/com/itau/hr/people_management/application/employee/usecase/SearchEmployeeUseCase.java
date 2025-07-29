@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.itau.hr.people_management.application.employee.dto.EmployeeResponse;
-import com.itau.hr.people_management.domain.employee.EmployeeSearchCriteria;
+import com.itau.hr.people_management.domain.employee.criteria.EmployeeSearchCriteria;
 import com.itau.hr.people_management.domain.employee.repository.EmployeeRepository;
 
 @Service

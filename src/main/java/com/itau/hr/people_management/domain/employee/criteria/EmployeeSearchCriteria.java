@@ -1,7 +1,9 @@
-package com.itau.hr.people_management.domain.employee;
+package com.itau.hr.people_management.domain.employee.criteria;
 
 import java.util.Optional;
 import java.util.UUID;
+
+import com.itau.hr.people_management.domain.employee.enumeration.EmployeeStatus;
 
 import lombok.Builder;
 import lombok.Getter;

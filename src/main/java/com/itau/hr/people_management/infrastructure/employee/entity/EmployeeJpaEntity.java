@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.itau.hr.people_management.domain.employee.EmployeeStatus;
+import com.itau.hr.people_management.domain.employee.enumeration.EmployeeStatus;
 import com.itau.hr.people_management.infrastructure.department.entity.DepartmentJpaEntity;
 import com.itau.hr.people_management.infrastructure.position.entity.PositionJpaEntity;
 

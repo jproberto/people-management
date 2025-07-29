@@ -1,0 +1,96 @@
+version: '3.8'
+
+networks:
+  app-network:
+    driver: bridge
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.0
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - app-network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    hostname: kafka
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+    networks:
+      - app-network
+
+  # Loki: Sistema de agregação de logs
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: loki
+    ports:
+      - "3100:3100" # Porta padrão do Loki para ingestão de logs e consultas
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml # Monta o arquivo de configuração do Loki
+      - P:/workspace/Loki:/tmp/loki # Persistência dos logs
+    networks:
+      - app-network
+    
+  # Promtail: Agente para coletar logs e enviar para o Loki
+  promtail:
+    image: grafana/promtail:2.9.0
+    container_name: promtail
+    command: -config.file=/etc/promtail/config.yaml
+    volumes:
+      - ./promtail-config.yaml:/etc/promtail/config.yaml # Monta o arquivo de configuração do Promtail
+      - /var/log:/var/log # Monta o diretório de logs do host (se sua app logar em arquivo)
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro # Monta logs de containers Docker
+      - P:/workspace/Java/people-management/logs:/var/log/app:ro
+    networks:
+      - app-network
+    depends_on:
+      - loki
+
+  # Grafana: Interface de visualização
+  grafana:
+    image: grafana/grafana:10.4.2
+    container_name: grafana
+    ports:
+      - "3000:3000" # Porta padrão do Grafana
+    volumes:
+      - grafana-data:/var/lib/grafana # Persistência dos dados do Grafana (dashboards, configurações)
+      - ./grafana-datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml # Provisiona o datasource Loki
+    networks:
+      - app-network
+    depends_on:
+      - loki
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop:4.0.0 
+    container_name: kafdrop
+    ports:
+      - "9000:9000" 
+    environment:
+      KAFKA_BROKERCONNECT: kafka:29092 # Conecta-se ao Kafka dentro da rede Docker
+      JVM_OPTS: "-Xms32M -Xmx64M" # Opcional: Ajuste de memória para containers pequenos
+    depends_on:
+      - kafka # Garante que o Kafka suba antes do Kafdrop
+    networks:
+      - app-network
+  
+volumes:
+  grafana-data:
