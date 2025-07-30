@@ -259,14 +259,14 @@ class EmployeeTest {
         }
 
         @Test
-        @DisplayName("Should change status from ACTIVE to INACTIVE")
-        void shouldChangeStatusFromActiveToInactive() {
+        @DisplayName("Should change status from ACTIVE to TERMINATED")
+        void shouldChangeStatusFromActiveToTERMINATED() {
             try (MockedStatic<DomainEventsHolder> mockedHolder = mockStatic(DomainEventsHolder.class)) {
                 // Act
-                employee.changeStatus(EmployeeStatus.INACTIVE);
+                employee.changeStatus(EmployeeStatus.TERMINATED);
 
                 // Assert
-                assertThat(employee.getStatus(), is(equalTo(EmployeeStatus.INACTIVE)));
+                assertThat(employee.getStatus(), is(equalTo(EmployeeStatus.TERMINATED)));
                 
                 mockedHolder.verify(() -> DomainEventsHolder.addEvent(any(EmployeeStatusChangedEvent.class)));
             }
@@ -322,14 +322,14 @@ class EmployeeTest {
         void shouldPublishDomainEventWhenStatusChanges() {
             try (MockedStatic<DomainEventsHolder> mockedHolder = mockStatic(DomainEventsHolder.class)) {
                 // Act
-                employee.changeStatus(EmployeeStatus.INACTIVE);
+                employee.changeStatus(EmployeeStatus.TERMINATED);
 
                 // Assert
                 mockedHolder.verify(() -> DomainEventsHolder.addEvent(argThat(event -> {
                     EmployeeStatusChangedEvent statusEvent = (EmployeeStatusChangedEvent) event;
                     return statusEvent.employeeId().equals(validId) &&
                            statusEvent.oldStatus().equals(EmployeeStatus.ACTIVE) &&
-                           statusEvent.newStatus().equals(EmployeeStatus.INACTIVE);
+                           statusEvent.newStatus().equals(EmployeeStatus.TERMINATED);
                 })));
             }
         }

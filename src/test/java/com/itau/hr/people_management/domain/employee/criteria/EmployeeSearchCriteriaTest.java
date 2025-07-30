@@ -528,12 +528,12 @@ class EmployeeSearchCriteriaTest {
             // Act
             criteria.setName("Updated Name");
             criteria.setEmailAddress("new.email@example.com");
-            criteria.setEmployeeStatus(EmployeeStatus.INACTIVE);
+            criteria.setEmployeeStatus(EmployeeStatus.TERMINATED);
 
             // Assert
             assertThat(criteria.getName().get(), is(equalTo("Updated Name")));
             assertThat(criteria.getEmailAddress().get(), is(equalTo("new.email@example.com")));
-            assertThat(criteria.getEmployeeStatus().get(), is(equalTo(EmployeeStatus.INACTIVE)));
+            assertThat(criteria.getEmployeeStatus().get(), is(equalTo(EmployeeStatus.TERMINATED)));
         }
 
         @Test

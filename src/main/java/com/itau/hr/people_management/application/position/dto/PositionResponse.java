@@ -19,6 +19,10 @@ public class PositionResponse {
     private String positionLevelName;
 
     public PositionResponse(Position position) {
+        if (position == null) {
+            throw new IllegalArgumentException("Position cannot be null");
+        }
+        
         this.id = position.getId();
         this.title = position.getTitle();
         

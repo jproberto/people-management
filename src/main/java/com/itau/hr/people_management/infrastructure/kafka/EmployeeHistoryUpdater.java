@@ -1,4 +1,4 @@
-package com.itau.hr.people_management.application.employee.listener;
+package com.itau.hr.people_management.infrastructure.kafka;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -113,24 +113,23 @@ public class EmployeeHistoryUpdater {
         try {
             employeeEventRepository.save(historyEvent);
         } catch (Exception e) {
-            log.error("DATABASE_ERROR: Failed to save history event {} for employee {}", historyEvent.getId(), historyEvent.getEmployeeId(), e);
             throw new RuntimeException("Failed to save employee history event", e);
         }
     }
 
     private void handleDeserializationError(EventType eventType, String message, JsonProcessingException e) {
         log.error("DESERIALIZATION_ERROR: Failed to deserialize {} for history. Invalid JSON: {}", eventType, truncateMessage(message), e);
-        throw new RuntimeException("Failed to deserialize " + eventType.name() + " for history update.", e);
+        throw new RuntimeException("Failed to deserialize " + eventType + " for history update.", e);
     }
 
     private void handleReflectionError(EventType eventType, String message, ReflectiveOperationException e) {
         log.error("REFLECTION_ERROR: Failed to extract properties from {} for history. Message: {}", eventType, truncateMessage(message), e);
-        throw new RuntimeException("Failed to extract properties from " + eventType.name() + " for history update.", e);
+        throw new RuntimeException("Failed to extract properties from " + eventType + " for history update.", e);
     }
 
     private void handleUnexpectedError(EventType eventType, String message, Exception e) {
         log.error("KAFKA_ERROR: Error handling {} for history. Message: {}", eventType, truncateMessage(message), e);
-        throw new RuntimeException("Failed to process " + eventType.name() + " for history update.", e);
+        throw new RuntimeException("Failed to process " + eventType + " for history update.", e);
     }
 
     private String truncateMessage(String message) {

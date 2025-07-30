@@ -1,4 +1,4 @@
-package com.itau.hr.people_management.application.employee.listener;
+package com.itau.hr.people_management.infrastructure.kafka;
 
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -47,6 +47,11 @@ public class EmployeeEventLogger {
     }
 
     private void logEmployeeCreatedEvent(EmployeeCreatedEvent event) {
+        if (event == null) {
+            log.warn("KAFKA_WARNING: Received null EmployeeCreatedEvent");
+            return;
+        }
+        
         logEvent(
             EventType.EMPLOYEE_CREATED_EVENT,
             event.eventId(),
@@ -59,6 +64,11 @@ public class EmployeeEventLogger {
     }
 
     private void logEmployeeStatusChangedEvent(EmployeeStatusChangedEvent event) {
+        if (event == null) {
+            log.warn("KAFKA_WARNING: Received null EmployeeStatusChangedEvent");
+            return;
+        }
+        
         logEvent(
             EventType.EMPLOYEE_STATUS_CHANGED_EVENT,
             event.eventId(),

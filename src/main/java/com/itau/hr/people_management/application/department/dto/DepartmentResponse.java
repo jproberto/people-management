@@ -19,6 +19,10 @@ public class DepartmentResponse {
     private String costCenterCode;
 
     public DepartmentResponse(Department department) {
+        if (department == null) {
+            throw new IllegalArgumentException("Department cannot be null");
+        }
+        
         this.id = department.getId();
         this.name = department.getName();
         this.costCenterCode = department.getCostCenterCode();

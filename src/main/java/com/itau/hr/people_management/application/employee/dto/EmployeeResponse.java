@@ -27,7 +27,7 @@ public class EmployeeResponse {
 
     public EmployeeResponse(Employee employee) {
         if (employee == null) {
-            return;
+            throw new IllegalArgumentException("Employee cannot be null");
         }
 
         this.id = employee.getId();
@@ -35,7 +35,7 @@ public class EmployeeResponse {
         this.email = employee.getEmail() != null ? employee.getEmail().getAddress() : null;
         this.hireDate = employee.getHireDate();
         this.employeeStatus = employee.getStatus() != null ? employee.getStatus().name() : null;
-        this.department = new DepartmentResponse(employee.getDepartment());
-        this.position = new PositionResponse(employee.getPosition());
+        this.department = employee.getDepartment() != null ? new DepartmentResponse(employee.getDepartment()) : null;
+        this.position = employee.getPosition() != null ? new PositionResponse(employee.getPosition()) : null;
     }
 }
