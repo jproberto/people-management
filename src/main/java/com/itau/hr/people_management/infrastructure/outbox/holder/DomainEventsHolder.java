@@ -24,6 +24,7 @@ public class DomainEventsHolder {
     }
 
     public static List<DomainEvent> peekEvents() {
-        return Collections.unmodifiableList(currentEvents.get());
+        List<DomainEvent> currentEventsPeek = new ArrayList<>(currentEvents.get());
+        return (Collections.unmodifiableList(currentEventsPeek));
     }
 }

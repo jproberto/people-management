@@ -16,6 +16,10 @@ import com.itau.hr.people_management.domain.employee.event.EmployeeCreatedEvent;
 import com.itau.hr.people_management.domain.employee.event.EmployeeStatusChangedEvent;
 import com.itau.hr.people_management.domain.employee.history.EmployeeEvent;
 import com.itau.hr.people_management.domain.employee.repository.EmployeeEventRepository;
+import com.itau.hr.people_management.infrastructure.kafka.exception.EmployeeHistoryEventSaveException;
+import com.itau.hr.people_management.infrastructure.kafka.exception.EmployeeEventDeserializationException;
+import com.itau.hr.people_management.infrastructure.kafka.exception.EmployeeEventReflectionException;
+import com.itau.hr.people_management.infrastructure.kafka.exception.EmployeeEventProcessingException;
 
 @Component
 public class EmployeeHistoryUpdater {
@@ -64,6 +68,8 @@ public class EmployeeHistoryUpdater {
             handleDeserializationError(eventType, message, e);
         } catch (ReflectiveOperationException e) {
             handleReflectionError(eventType, message, e);
+        } catch (EmployeeHistoryEventSaveException e) {
+            handleEmployeeHistoryEventSaveException(eventType, message, e);
         } catch (Exception e) {
             handleUnexpectedError(eventType, message, e);
         }
@@ -113,23 +119,36 @@ public class EmployeeHistoryUpdater {
         try {
             employeeEventRepository.save(historyEvent);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to save employee history event", e);
+            throw new EmployeeHistoryEventSaveException("Failed to save employee history event", e);
         }
     }
 
     private void handleDeserializationError(EventType eventType, String message, JsonProcessingException e) {
-        log.error("DESERIALIZATION_ERROR: Failed to deserialize {} for history. Invalid JSON: {}", eventType, truncateMessage(message), e);
-        throw new RuntimeException("Failed to deserialize " + eventType + " for history update.", e);
+        if (log.isErrorEnabled()) {
+            log.error("DESERIALIZATION_ERROR: Failed to deserialize {} for history. Invalid JSON: {}", eventType, truncateMessage(message), e);
+        }
+        throw new EmployeeEventDeserializationException("Failed to deserialize " + eventType + " for history update.", e);
     }
 
     private void handleReflectionError(EventType eventType, String message, ReflectiveOperationException e) {
-        log.error("REFLECTION_ERROR: Failed to extract properties from {} for history. Message: {}", eventType, truncateMessage(message), e);
-        throw new RuntimeException("Failed to extract properties from " + eventType + " for history update.", e);
+        if (log.isErrorEnabled()) {
+            log.error("REFLECTION_ERROR: Failed to extract properties from {} for history. Message: {}", eventType, truncateMessage(message), e);
+        }
+        throw new EmployeeEventReflectionException("Failed to extract properties from " + eventType + " for history update.", e);
+    }
+    
+    private void handleUnexpectedError(EventType eventType, String message, Exception e) {
+        if (log.isErrorEnabled()) {
+            log.error("KAFKA_ERROR: Error handling {} for history. Message: {}", eventType, truncateMessage(message), e);
+        }
+        throw new EmployeeEventProcessingException("Failed to process " + eventType + " for history update.", e);
     }
 
-    private void handleUnexpectedError(EventType eventType, String message, Exception e) {
-        log.error("KAFKA_ERROR: Error handling {} for history. Message: {}", eventType, truncateMessage(message), e);
-        throw new RuntimeException("Failed to process " + eventType + " for history update.", e);
+    private void handleEmployeeHistoryEventSaveException(EventType eventType, String message, Exception e) {
+        if (log.isErrorEnabled()) {
+            log.error("HISTORY_SAVE_ERROR: Failed to save {} for history. Message: {}", eventType, truncateMessage(message), e);
+        }
+        throw new EmployeeHistoryEventSaveException("Failed to save " + eventType + " for history update.", e);
     }
 
     private String truncateMessage(String message) {
