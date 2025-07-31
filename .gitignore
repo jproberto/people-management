@@ -32,5 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 logs/
-hs_err_pid26424.log
-replay_pid26424.log
+*.log
