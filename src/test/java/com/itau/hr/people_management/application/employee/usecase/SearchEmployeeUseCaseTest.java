@@ -16,7 +16,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -35,9 +34,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.itau.hr.people_management.application.employee.dto.EmployeeResponse;
 import com.itau.hr.people_management.domain.employee.criteria.EmployeeSearchCriteria;
 import com.itau.hr.people_management.domain.employee.entity.Employee;
-import com.itau.hr.people_management.domain.employee.enumeration.EmployeeStatus;
 import com.itau.hr.people_management.domain.employee.repository.EmployeeRepository;
-import com.itau.hr.people_management.domain.shared.vo.Email;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("SearchEmployeeUseCase Tests")
@@ -63,26 +60,6 @@ class SearchEmployeeUseCaseTest {
     @BeforeEach
     void setUp() {
         useCase = new SearchEmployeeUseCase(employeeRepository);
-    }
-
-    private void setupMockEmployees() {
-        // Setup employee1
-        when(employee1.getName()).thenReturn("John Doe");
-        when(employee1.getEmail()).thenReturn(Email.create("john.doe@itau.com.br"));
-        when(employee1.getStatus()).thenReturn(EmployeeStatus.ACTIVE);
-        when(employee1.getHireDate()).thenReturn(LocalDate.of(2023, 1, 15));
-
-        // Setup employee2
-        when(employee2.getName()).thenReturn("Jane Smith");
-        when(employee2.getEmail()).thenReturn(Email.create("jane.smith@itau.com.br"));
-        when(employee2.getStatus()).thenReturn(EmployeeStatus.ON_VACATION);
-        when(employee2.getHireDate()).thenReturn(LocalDate.of(2022, 3, 20));
-
-        // Setup employee3
-        when(employee3.getName()).thenReturn("Bob Johnson");
-        when(employee3.getEmail()).thenReturn(Email.create("bob.johnson@itau.com.br"));
-        when(employee3.getStatus()).thenReturn(EmployeeStatus.TERMINATED);
-        when(employee3.getHireDate()).thenReturn(LocalDate.of(2021, 7, 10));
     }
 
     @Nested
