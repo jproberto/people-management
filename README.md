@@ -2,7 +2,7 @@
 
 > Sistema de gestão de colaboradores desenvolvido com **arquitetura DDD/Hexagonal**, **Spring Boot 3.x**, **PostgreSQL**, **Kafka** e **CI/CD automatizado**.
 
-[![CI](https://github.com/your-username/people-management/workflows/CI%20-%20Build%20and%20Test/badge.svg)](https://github.com/your-username/people-management/actions)
+[![CI](https://github.com/jproberto/people-management/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/people-management/actions)
 ![Java](https://img.shields.io/badge/Java-21-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.8-brightgreen)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue)
