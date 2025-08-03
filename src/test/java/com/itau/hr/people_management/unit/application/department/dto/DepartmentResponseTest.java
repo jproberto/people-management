@@ -24,12 +24,6 @@ class DepartmentResponseTest {
     private Department department;
 
     @Test
-    @DisplayName("erro proposital para falhar CI")
-    void erroPropositalParaFalharCI() {
-        assertThat("This test is expected to fail", false);
-    }
-
-    @Test
     @DisplayName("Should create response from department entity")
     void shouldCreateResponseFromDepartmentEntity() {
         // Arrange
