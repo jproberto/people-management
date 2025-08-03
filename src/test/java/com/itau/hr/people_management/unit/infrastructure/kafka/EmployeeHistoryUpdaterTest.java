@@ -9,6 +9,7 @@ import static org.mockito.Mockito.*;
 import java.time.Instant;
 import java.util.UUID;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,6 +32,9 @@ import com.itau.hr.people_management.infrastructure.kafka.EmployeeHistoryUpdater
 import com.itau.hr.people_management.infrastructure.kafka.exception.EmployeeEventDeserializationException;
 import com.itau.hr.people_management.infrastructure.kafka.exception.EmployeeEventProcessingException;
 import com.itau.hr.people_management.infrastructure.kafka.exception.EmployeeHistoryEventSaveException;
+import com.itau.hr.people_management.integration.infrastructure.kafka.support.TestLogAppender;
+
+import ch.qos.logback.classic.Logger;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("EmployeeHistoryUpdater Unit Tests")
@@ -49,6 +54,9 @@ class EmployeeHistoryUpdaterTest {
 
     private EmployeeHistoryUpdater historyUpdater;
 
+    private TestLogAppender testLogAppender;
+    private Logger employeeHistoryUpdaterLogger;
+
     private String validJsonMessage;
     private UUID eventId;
     private UUID employeeId;
@@ -62,6 +70,20 @@ class EmployeeHistoryUpdaterTest {
         employeeId = UUID.randomUUID();
         occurredOn = Instant.now();
         validJsonMessage = "{\"eventId\":\"123\",\"employeeId\":\"456\"}";
+
+        employeeHistoryUpdaterLogger = (Logger) LoggerFactory.getLogger("com.itau.hr.people_management.infrastructure.kafka.EmployeeHistoryUpdater");
+        testLogAppender = new TestLogAppender();
+        testLogAppender.start();
+        employeeHistoryUpdaterLogger.addAppender(testLogAppender);
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (employeeHistoryUpdaterLogger != null && testLogAppender != null) {
+            employeeHistoryUpdaterLogger.detachAppender(testLogAppender);
+            testLogAppender.stop();
+        }
+        reset(employeeEventRepository);
     }
 
     @Nested
@@ -147,12 +169,12 @@ class EmployeeHistoryUpdaterTest {
                 .thenReturn(null);
 
             // Act & Assert
-            EmployeeEventProcessingException exception = assertThrows(
-                EmployeeEventProcessingException.class,
-                () -> historyUpdater.handleEmployeeCreatedEvent(validJsonMessage)
-            );
+            historyUpdater.handleEmployeeCreatedEvent(validJsonMessage);
 
-            assertThat(exception.getCause(), is(instanceOf(IllegalArgumentException.class)));
+            //Assert
+            assertThat(testLogAppender.getErrorMessages(), hasSize(greaterThan(0)));
+            String errorMessage = testLogAppender.getLastErrorMessage();
+            assertThat(errorMessage, containsString("KAFKA_ERROR: Invalid EMPLOYEE_CREATED_EVENT received."));
         }
     }
 

@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 import org.junit.jupiter.api.DisplayName;
@@ -46,13 +45,11 @@ class EmployeeResponseTest {
         UUID employeeId = UUID.randomUUID();
         String name = "John Doe";
         String emailAddress = "john.doe@example.com";
-        LocalDate hireDate = LocalDate.of(2023, 1, 15);
         
         when(employee.getId()).thenReturn(employeeId);
         when(employee.getName()).thenReturn(name);
         when(employee.getEmail()).thenReturn(email);
         when(email.getAddress()).thenReturn(emailAddress);
-        when(employee.getHireDate()).thenReturn(hireDate);
         when(employee.getStatus()).thenReturn(EmployeeStatus.ACTIVE);
         when(employee.getDepartment()).thenReturn(department);
         when(employee.getPosition()).thenReturn(position);
@@ -64,7 +61,6 @@ class EmployeeResponseTest {
         assertThat(response.getId(), is(employeeId));
         assertThat(response.getName(), is(name));
         assertThat(response.getEmail(), is(emailAddress));
-        assertThat(response.getHireDate(), is(hireDate));
         assertThat(response.getEmployeeStatus(), is("ACTIVE"));
         assertThat(response.getDepartment(), is(instanceOf(DepartmentResponse.class)));
         assertThat(response.getPosition(), is(instanceOf(PositionResponse.class)));
@@ -77,7 +73,6 @@ class EmployeeResponseTest {
         when(employee.getId()).thenReturn(UUID.randomUUID());
         when(employee.getName()).thenReturn("John Doe");
         when(employee.getEmail()).thenReturn(null);
-        when(employee.getHireDate()).thenReturn(LocalDate.now());
         when(employee.getStatus()).thenReturn(EmployeeStatus.ACTIVE);
         when(employee.getDepartment()).thenReturn(null);
         when(employee.getPosition()).thenReturn(null);
@@ -96,7 +91,6 @@ class EmployeeResponseTest {
         when(employee.getId()).thenReturn(UUID.randomUUID());
         when(employee.getName()).thenReturn("John Doe");
         when(employee.getEmail()).thenReturn(null);
-        when(employee.getHireDate()).thenReturn(LocalDate.now());
         when(employee.getStatus()).thenReturn(null);
         when(employee.getDepartment()).thenReturn(null);
         when(employee.getPosition()).thenReturn(null);
@@ -115,7 +109,6 @@ class EmployeeResponseTest {
         when(employee.getId()).thenReturn(UUID.randomUUID());
         when(employee.getName()).thenReturn("John Doe");
         when(employee.getEmail()).thenReturn(null);
-        when(employee.getHireDate()).thenReturn(LocalDate.now());
         when(employee.getStatus()).thenReturn(null);
         when(employee.getDepartment()).thenReturn(null);
         when(employee.getPosition()).thenReturn(null);
@@ -146,7 +139,6 @@ class EmployeeResponseTest {
         when(employee.getId()).thenReturn(UUID.randomUUID());
         when(employee.getName()).thenReturn("John Doe");
         when(employee.getEmail()).thenReturn(null);
-        when(employee.getHireDate()).thenReturn(LocalDate.now());
         when(employee.getStatus()).thenReturn(EmployeeStatus.TERMINATED);
         when(employee.getDepartment()).thenReturn(null);
         when(employee.getPosition()).thenReturn(null);

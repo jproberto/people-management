@@ -38,6 +38,12 @@ public class EmployeeEventLogger {
     private <T> void processEvent(String message, Class<T> eventClass, Consumer<T> logFunction, String eventType) {
         try {
             T event = deserializeEvent(message, eventClass);
+
+            if (isEventInvalid(event, eventClass)) {
+                log.error("KAFKA_ERROR: Invalid {} received. Message: {}", eventType, message);
+                return;
+            }
+
             logFunction.accept(event);
         } catch (JsonProcessingException e) {
             log.error("KAFKA_ERROR: Failed to process {} for logging.", eventType, e);
@@ -86,5 +92,22 @@ public class EmployeeEventLogger {
 
     private <T> T deserializeEvent(String message, Class<T> eventClass) throws JsonProcessingException {
         return objectMapper.readValue(message, eventClass);
+    }
+
+    private <T> boolean isEventInvalid(T event, Class<T> eventClass) {
+        if (event == null) {
+            return true; 
+        }
+        
+        if (eventClass.equals(EmployeeCreatedEvent.class)) {
+            EmployeeCreatedEvent createdEvent = (EmployeeCreatedEvent) event;
+            return createdEvent.eventId() == null || createdEvent.employeeId() == null;
+        } else if (eventClass.equals(EmployeeStatusChangedEvent.class)) {
+            EmployeeStatusChangedEvent statusChangedEvent = (EmployeeStatusChangedEvent) event;
+            return statusChangedEvent.eventId() == null || statusChangedEvent.employeeId() == null ||
+                   statusChangedEvent.oldStatus() == null || statusChangedEvent.newStatus() == null;
+        }
+        
+        return false; 
     }
 }

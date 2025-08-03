@@ -20,14 +20,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itau.hr.people_management.domain.employee.enumeration.EventType;
 import com.itau.hr.people_management.domain.employee.event.EmployeeCreatedEvent;
 import com.itau.hr.people_management.domain.employee.event.EmployeeStatusChangedEvent;
 import com.itau.hr.people_management.domain.shared.event.DomainEvent;
-import com.itau.hr.people_management.infrastructure.outbox.entity.OutboxMessage;
 import com.itau.hr.people_management.infrastructure.outbox.enumeration.OutboxMessageStatus;
 import com.itau.hr.people_management.infrastructure.outbox.exception.OutboxEventSerializationException;
 import com.itau.hr.people_management.infrastructure.outbox.publisher.OutboxEventPublisher;
-import com.itau.hr.people_management.infrastructure.outbox.repository.OutboxMessageRepository;
+import com.itau.hr.people_management.infrastructure.persistence.entity.OutboxMessage;
+import com.itau.hr.people_management.infrastructure.persistence.repository.OutboxMessageRepository;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("OutboxEventPublisher Unit Tests")
@@ -86,7 +87,7 @@ class OutboxEventPublisherTest {
             OutboxMessage savedMessage = captor.getValue();
             assertThat(savedMessage.getAggregateId(), is(employeeId));
             assertThat(savedMessage.getAggregateType(), is("Employee"));
-            assertThat(savedMessage.getEventType(), is(EmployeeCreatedEvent.class.getName()));
+            assertThat(savedMessage.getEventType(), is(EventType.EMPLOYEE_CREATED_EVENT.name()));
             assertThat(savedMessage.getPayload(), is(payload));
             assertThat(savedMessage.getStatus(), is(OutboxMessageStatus.PENDING));
         }
@@ -112,7 +113,7 @@ class OutboxEventPublisherTest {
             
             OutboxMessage savedMessage = captor.getValue();
             assertThat(savedMessage.getAggregateType(), is("Employee"));
-            assertThat(savedMessage.getEventType(), is(EmployeeStatusChangedEvent.class.getName()));
+            assertThat(savedMessage.getEventType(), is(EventType.EMPLOYEE_STATUS_CHANGED_EVENT.name()));
         }
     }
 
@@ -126,6 +127,7 @@ class OutboxEventPublisherTest {
             // Arrange
             when(unknownEvent.getEventId()).thenReturn(eventId);
             when(unknownEvent.getOccurredOn()).thenReturn(occurredOn);
+            when(unknownEvent.getEventType()).thenReturn(EventType.EMPLOYEE_CREATED_EVENT);
             when(objectMapper.writeValueAsString(unknownEvent)).thenReturn(payload);
 
             // Act
@@ -149,7 +151,8 @@ class OutboxEventPublisherTest {
         @DisplayName("Should throw OutboxEventSerializationException on JSON error")
         void shouldThrowSerializationExceptionOnJsonError() throws JsonProcessingException {
             // Arrange
-            setupEmployeeCreatedEventMocks();
+            when(employeeCreatedEvent.getEventId()).thenReturn(eventId);
+            when(employeeCreatedEvent.getEmployeeId()).thenReturn(employeeId);
             JsonProcessingException jsonException = mock(JsonProcessingException.class);
             when(objectMapper.writeValueAsString(employeeCreatedEvent)).thenThrow(jsonException);
 
@@ -177,12 +180,14 @@ class OutboxEventPublisherTest {
 
     private void setupEmployeeCreatedEventMocks() {
         when(employeeCreatedEvent.getEventId()).thenReturn(eventId);
-        when(employeeCreatedEvent.employeeId()).thenReturn(employeeId);
+        when(employeeCreatedEvent.getEmployeeId()).thenReturn(employeeId);
+        when(employeeCreatedEvent.getEventType()).thenReturn(EventType.EMPLOYEE_CREATED_EVENT);
     }
 
     private void setupEmployeeStatusChangedEventMocks() {
         when(employeeStatusChangedEvent.getEventId()).thenReturn(eventId);
         when(employeeStatusChangedEvent.getOccurredOn()).thenReturn(occurredOn);
-        when(employeeStatusChangedEvent.employeeId()).thenReturn(employeeId);
+        when(employeeStatusChangedEvent.getEmployeeId()).thenReturn(employeeId);
+        when(employeeStatusChangedEvent.getEventType()).thenReturn(EventType.EMPLOYEE_STATUS_CHANGED_EVENT);
     }
 }

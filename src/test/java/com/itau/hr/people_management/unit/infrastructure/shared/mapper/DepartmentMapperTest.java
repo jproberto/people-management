@@ -14,7 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.itau.hr.people_management.domain.department.entity.Department;
-import com.itau.hr.people_management.infrastructure.department.entity.DepartmentJpaEntity;
+import com.itau.hr.people_management.infrastructure.persistence.entity.DepartmentJpaEntity;
 import com.itau.hr.people_management.infrastructure.shared.mapper.DepartmentMapper;
 
 @ExtendWith(MockitoExtension.class)

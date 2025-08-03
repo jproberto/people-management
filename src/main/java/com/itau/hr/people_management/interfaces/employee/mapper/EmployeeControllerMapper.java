@@ -32,7 +32,6 @@ public class EmployeeControllerMapper {
         return new CreateEmployeeRequest(
             apiRequestDTO.getName(),
             apiRequestDTO.getEmail(),
-            apiRequestDTO.getHireDate(),
             apiRequestDTO.getDepartmentId(),
             apiRequestDTO.getPositionId()
         );
@@ -47,7 +46,6 @@ public class EmployeeControllerMapper {
         responseDTO.setId(applicationResponse.getId());
         responseDTO.setName(applicationResponse.getName());
         responseDTO.setEmail(applicationResponse.getEmail());  
-        responseDTO.setHireDate(applicationResponse.getHireDate());
         responseDTO.setEmployeeStatus(EmployeeStatus.valueOf(applicationResponse.getEmployeeStatus()));
 
         if (applicationResponse.getDepartment() != null) {

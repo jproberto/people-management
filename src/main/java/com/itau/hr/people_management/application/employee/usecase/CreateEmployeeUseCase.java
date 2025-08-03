@@ -54,7 +54,6 @@ public class CreateEmployeeUseCase {
                                     UUID.randomUUID(),
                                     request.getName(),
                                     Email.create(request.getEmail()),
-                                    request.getHireDate(),
                                     EmployeeStatus.ACTIVE,
                                     department,
                                     position

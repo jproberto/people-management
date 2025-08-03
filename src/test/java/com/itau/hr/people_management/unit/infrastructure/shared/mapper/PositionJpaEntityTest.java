@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.itau.hr.people_management.domain.position.entity.Position;
 import com.itau.hr.people_management.domain.position.enumeration.PositionLevel;
-import com.itau.hr.people_management.infrastructure.position.entity.PositionJpaEntity;
+import com.itau.hr.people_management.infrastructure.persistence.entity.PositionJpaEntity;
 import com.itau.hr.people_management.infrastructure.shared.mapper.PositionMapper;
 
 @ExtendWith(MockitoExtension.class)

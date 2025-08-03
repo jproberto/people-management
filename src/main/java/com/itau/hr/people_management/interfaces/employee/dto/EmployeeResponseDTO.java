@@ -1,6 +1,5 @@
 package com.itau.hr.people_management.interfaces.employee.dto;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 import com.itau.hr.people_management.domain.employee.enumeration.EmployeeStatus;
@@ -27,9 +26,6 @@ public class EmployeeResponseDTO {
 
     @Schema(description = "Current status of the employee", example = "ACTIVE")
     private EmployeeStatus employeeStatus;
-
-    @Schema(description = "Date when the employee was hired", example = "2025-08-15")
-    private LocalDate hireDate;
 
     @Schema(description = "Department the employee belongs to")
     private DepartmentResponseDTO department; 

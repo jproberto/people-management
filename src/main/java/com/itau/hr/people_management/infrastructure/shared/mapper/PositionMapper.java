@@ -1,7 +1,7 @@
 package com.itau.hr.people_management.infrastructure.shared.mapper;
 
 import com.itau.hr.people_management.domain.position.entity.Position;
-import com.itau.hr.people_management.infrastructure.position.entity.PositionJpaEntity;
+import com.itau.hr.people_management.infrastructure.persistence.entity.PositionJpaEntity;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

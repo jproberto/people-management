@@ -2,7 +2,7 @@ package com.itau.hr.people_management.infrastructure.shared.mapper;
 
 import com.itau.hr.people_management.domain.employee.entity.Employee;
 import com.itau.hr.people_management.domain.shared.vo.Email;
-import com.itau.hr.people_management.infrastructure.employee.entity.EmployeeJpaEntity;
+import com.itau.hr.people_management.infrastructure.persistence.entity.EmployeeJpaEntity;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -18,7 +18,6 @@ public class EmployeeMapper {
                 .id(domainEmployee.getId())
                 .name(domainEmployee.getName())
                 .email(domainEmployee.getEmail().getAddress())
-                .hireDate(domainEmployee.getHireDate())
                 .status(domainEmployee.getStatus())
                 .department(DepartmentMapper.toJpaEntity(domainEmployee.getDepartment()))
                 .position(PositionMapper.toJpaEntity(domainEmployee.getPosition()))
@@ -34,7 +33,6 @@ public class EmployeeMapper {
                 jpaEmployee.getId(),
                 jpaEmployee.getName(),
                 Email.create(jpaEmployee.getEmail()),
-                jpaEmployee.getHireDate(),
                 jpaEmployee.getStatus(),
                 DepartmentMapper.toDomainEntity(jpaEmployee.getDepartment()),
                 PositionMapper.toDomainEntity(jpaEmployee.getPosition())

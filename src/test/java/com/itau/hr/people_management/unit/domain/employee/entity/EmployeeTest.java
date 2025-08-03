@@ -12,7 +12,6 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -53,7 +52,6 @@ class EmployeeTest {
 
     private UUID validId;
     private String validName;
-    private LocalDate validHireDate;
     private EmployeeStatus validStatus;
 
     @BeforeEach
@@ -61,7 +59,6 @@ class EmployeeTest {
         Employee.setMessageSource(messageSource);
         validId = UUID.randomUUID();
         validName = "John Doe";
-        validHireDate = LocalDate.now().minusDays(30);
         validStatus = EmployeeStatus.ACTIVE;
     }
 
@@ -69,13 +66,12 @@ class EmployeeTest {
     @DisplayName("Should create employee with valid parameters")
     void shouldCreateEmployeeWithValidParameters() {
         // Act
-        Employee employee = Employee.create(validId, validName, email, validHireDate, validStatus, department, position);
+        Employee employee = Employee.create(validId, validName, email, validStatus, department, position);
 
         // Assert
         assertThat(employee.getId(), is(validId));
         assertThat(employee.getName(), is(validName));
         assertThat(employee.getEmail(), is(email));
-        assertThat(employee.getHireDate(), is(validHireDate));
         assertThat(employee.getStatus(), is(validStatus));
         assertThat(employee.getDepartment(), is(department));
         assertThat(employee.getPosition(), is(position));
@@ -91,13 +87,13 @@ class EmployeeTest {
 
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () ->
-            Employee.create(null, validName, email, validHireDate, validStatus, department, position));
+            Employee.create(null, validName, email, validStatus, department, position));
 
         assertThrows(IllegalArgumentException.class, () ->
-            Employee.create(validId, null, email, validHireDate, validStatus, department, position));
+            Employee.create(validId, null, email, validStatus, department, position));
 
         assertThrows(IllegalArgumentException.class, () ->
-            Employee.create(validId, validName, null, validHireDate, validStatus, department, position));
+            Employee.create(validId, validName, null, validStatus, department, position));
     }
 
     @Test
@@ -108,7 +104,7 @@ class EmployeeTest {
         
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () ->
-            Employee.create(validId, " ", email, validHireDate, validStatus, department, position));
+            Employee.create(validId, " ", email, validStatus, department, position));
     }
 
     @ParameterizedTest
@@ -120,7 +116,7 @@ class EmployeeTest {
         
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () ->
-            Employee.create(validId, invalidName, email, validHireDate, validStatus, department, position));
+            Employee.create(validId, invalidName, email, validStatus, department, position));
     }
 
     private static Stream<String> invalidNamesProvider() {
@@ -131,24 +127,11 @@ class EmployeeTest {
     }
 
     @Test
-    @DisplayName("Should throw exception when hire date is future")
-    void shouldThrowExceptionWhenHireDateIsFuture() {
-        // Arrange
-        LocalDate futureDate = LocalDate.now().plusDays(1);
-        when(messageSource.getMessage("validation.employee.hiredate.future"))
-            .thenReturn("Hire date cannot be in the future");
-
-        // Act & Assert
-        assertThrows(IllegalArgumentException.class, () ->
-            Employee.create(validId, validName, email, futureDate, validStatus, department, position));
-    }
-
-    @Test
     @DisplayName("Should change status and publish event")
     void shouldChangeStatusAndPublishEvent() {
         try (MockedStatic<DomainEventsHolder> mockedHolder = mockStatic(DomainEventsHolder.class)) {
             // Arrange
-            Employee employee = Employee.create(validId, validName, email, validHireDate, EmployeeStatus.ACTIVE, department, position);
+            Employee employee = Employee.create(validId, validName, email, validStatus, department, position);
 
             // Act
             employee.changeStatus(EmployeeStatus.TERMINATED);
@@ -168,7 +151,7 @@ class EmployeeTest {
     @DisplayName("Should not allow status change for terminated employee")
     void shouldNotAllowStatusChangeForTerminatedEmployee() {
         // Arrange
-        Employee terminatedEmployee = Employee.create(validId, validName, email, validHireDate, 
+        Employee terminatedEmployee = Employee.create(validId, validName, email, 
             EmployeeStatus.TERMINATED, department, position);
         when(messageSource.getMessage("validation.employee.old.status.terminated"))
             .thenReturn("Cannot change status of terminated employee");
@@ -183,7 +166,7 @@ class EmployeeTest {
     void shouldReactivateTerminatedEmployee() {
         try (MockedStatic<DomainEventsHolder> mockedHolder = mockStatic(DomainEventsHolder.class)) {
             // Arrange
-            Employee terminatedEmployee = Employee.create(validId, validName, email, validHireDate, 
+            Employee terminatedEmployee = Employee.create(validId, validName, email, 
                 EmployeeStatus.TERMINATED, department, position);
 
             // Act
@@ -199,7 +182,7 @@ class EmployeeTest {
     @DisplayName("Should not allow reactivation of non-terminated employee")
     void shouldNotAllowReactivationOfNonTerminatedEmployee() {
         // Arrange
-        Employee activeEmployee = Employee.create(validId, validName, email, validHireDate, 
+        Employee activeEmployee = Employee.create(validId, validName, email, 
             EmployeeStatus.ACTIVE, department, position);
         when(messageSource.getMessage("validation.employee.status.not.terminated"))
             .thenReturn("Employee is not terminated");
@@ -212,8 +195,8 @@ class EmployeeTest {
     @DisplayName("Should be equal when IDs are the same")
     void shouldBeEqualWhenIdsAreTheSame() {
         // Arrange
-        Employee employee1 = Employee.create(validId, validName, email, validHireDate, validStatus, department, position);
-        Employee employee2 = Employee.create(validId, "Different Name", email, validHireDate, validStatus, department, position);
+        Employee employee1 = Employee.create(validId, validName, email, validStatus, department, position);
+        Employee employee2 = Employee.create(validId, "Different Name", email, validStatus, department, position);
 
         // Act & Assert
         assertThat(employee1, is(equalTo(employee2)));
@@ -225,8 +208,8 @@ class EmployeeTest {
     void shouldNotBeEqualWhenIdsAreDifferent() {
         // Arrange
         UUID differentId = UUID.randomUUID();
-        Employee employee1 = Employee.create(validId, validName, email, validHireDate, validStatus, department, position);
-        Employee employee2 = Employee.create(differentId, validName, email, validHireDate, validStatus, department, position);
+        Employee employee1 = Employee.create(validId, validName, email, validStatus, department, position);
+        Employee employee2 = Employee.create(differentId, validName, email, validStatus, department, position);
 
         // Act & Assert
         assertThat(employee1, is(not(equalTo(employee2))));
@@ -236,7 +219,7 @@ class EmployeeTest {
     @DisplayName("Should include ID and name in toString")
     void shouldIncludeIdAndNameInToString() {
         // Arrange
-        Employee employee = Employee.create(validId, validName, email, validHireDate, validStatus, department, position);
+        Employee employee = Employee.create(validId, validName, email, validStatus, department, position);
 
         // Act
         String result = employee.toString();

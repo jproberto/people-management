@@ -13,10 +13,10 @@ import com.itau.hr.people_management.domain.employee.event.EmployeeCreatedEvent;
 import com.itau.hr.people_management.domain.employee.event.EmployeeStatusChangedEvent;
 import com.itau.hr.people_management.domain.employee.event.EventPublisher;
 import com.itau.hr.people_management.domain.shared.event.DomainEvent;
-import com.itau.hr.people_management.infrastructure.outbox.entity.OutboxMessage;
 import com.itau.hr.people_management.infrastructure.outbox.enumeration.OutboxMessageStatus;
 import com.itau.hr.people_management.infrastructure.outbox.exception.OutboxEventSerializationException;
-import com.itau.hr.people_management.infrastructure.outbox.repository.OutboxMessageRepository;
+import com.itau.hr.people_management.infrastructure.persistence.entity.OutboxMessage;
+import com.itau.hr.people_management.infrastructure.persistence.repository.OutboxMessageRepository;
 
 @Component
 public class OutboxEventPublisher implements EventPublisher {
@@ -37,11 +37,11 @@ public class OutboxEventPublisher implements EventPublisher {
 
             switch (event) {
                 case EmployeeCreatedEvent employeeCreatedEvent -> {
-                    aggregateId = employeeCreatedEvent.employeeId();
+                    aggregateId = employeeCreatedEvent.getEmployeeId();
                     aggregateType = "Employee";
                 }
                 case EmployeeStatusChangedEvent employeeStatusChangedEvent -> {
-                    aggregateId = employeeStatusChangedEvent.employeeId();
+                    aggregateId = employeeStatusChangedEvent.getEmployeeId();
                     aggregateType = "Employee";
                 }
                 default -> log.warn("Unknown DomainEvent type: {}. Cannot determine aggregateId/Type. Storing with nulls.", event.getClass().getName());
@@ -54,7 +54,7 @@ public class OutboxEventPublisher implements EventPublisher {
                 .occurredOn(event.getOccurredOn())
                 .aggregateType(aggregateType)
                 .aggregateId(aggregateId)
-                .eventType(event.getClass().getName())
+                .eventType(event.getEventType().name())
                 .payload(payload)
                 .status(OutboxMessageStatus.PENDING)
                 .nextAttemptAt(Instant.now())

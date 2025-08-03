@@ -1,11 +1,15 @@
 package com.itau.hr.people_management.unit.interfaces.employee.mapper;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Field;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -62,7 +66,6 @@ class EmployeeControllerMapperTest {
         requestDTO = new EmployeeRequestDTO();
         requestDTO.setName("John Doe");
         requestDTO.setEmail("john.doe@example.com");
-        requestDTO.setHireDate(LocalDate.of(2023, 1, 15));
         requestDTO.setDepartmentId(UUID.randomUUID());
         requestDTO.setPositionId(UUID.randomUUID());
 
@@ -70,7 +73,6 @@ class EmployeeControllerMapperTest {
             UUID.randomUUID(),
             "John Doe",
             "john.doe@example.com",
-            LocalDate.of(2023, 1, 15),
             "ACTIVE",
             departmentResponse,
             positionResponse
@@ -97,7 +99,6 @@ class EmployeeControllerMapperTest {
         // Assert
         assertThat(result.getName(), is("John Doe"));
         assertThat(result.getEmail(), is("john.doe@example.com"));
-        assertThat(result.getHireDate(), is(LocalDate.of(2023, 1, 15)));
         assertThat(result.getDepartmentId(), is(requestDTO.getDepartmentId()));
         assertThat(result.getPositionId(), is(requestDTO.getPositionId()));
     }
@@ -126,7 +127,6 @@ class EmployeeControllerMapperTest {
         assertThat(result.getId(), is(applicationResponse.getId()));
         assertThat(result.getName(), is("John Doe"));
         assertThat(result.getEmail(), is("john.doe@example.com"));
-        assertThat(result.getHireDate(), is(LocalDate.of(2023, 1, 15)));
         assertThat(result.getEmployeeStatus(), is(EmployeeStatus.ACTIVE));
         assertThat(result.getDepartment(), is(departmentResponseDTO));
         assertThat(result.getPosition(), is(positionResponseDTO));
@@ -141,7 +141,7 @@ class EmployeeControllerMapperTest {
         // Arrange
         EmployeeResponse responseWithNulls = new EmployeeResponse(
             UUID.randomUUID(), "John Doe", "john@example.com", 
-            LocalDate.now(), "ACTIVE", null, null
+             "ACTIVE", null, null
         );
 
         // Act

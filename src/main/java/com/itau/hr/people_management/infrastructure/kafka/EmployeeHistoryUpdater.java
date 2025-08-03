@@ -16,10 +16,10 @@ import com.itau.hr.people_management.domain.employee.event.EmployeeCreatedEvent;
 import com.itau.hr.people_management.domain.employee.event.EmployeeStatusChangedEvent;
 import com.itau.hr.people_management.domain.employee.history.EmployeeEvent;
 import com.itau.hr.people_management.domain.employee.repository.EmployeeEventRepository;
-import com.itau.hr.people_management.infrastructure.kafka.exception.EmployeeHistoryEventSaveException;
 import com.itau.hr.people_management.infrastructure.kafka.exception.EmployeeEventDeserializationException;
-import com.itau.hr.people_management.infrastructure.kafka.exception.EmployeeEventReflectionException;
 import com.itau.hr.people_management.infrastructure.kafka.exception.EmployeeEventProcessingException;
+import com.itau.hr.people_management.infrastructure.kafka.exception.EmployeeEventReflectionException;
+import com.itau.hr.people_management.infrastructure.kafka.exception.EmployeeHistoryEventSaveException;
 
 @Component
 public class EmployeeHistoryUpdater {
@@ -52,7 +52,13 @@ public class EmployeeHistoryUpdater {
             validateMessage(message);
             
             T event = deserializeEvent(message, eventClass);
-            validateEvent(event);
+
+            if (isEventInvalid(event, eventClass)) {
+                if (log.isErrorEnabled()) {
+                    log.error("KAFKA_ERROR: Invalid {} received. Message: {}", eventType, truncateMessage(message));
+                }
+                return;
+            }
             
             UUID employeeId = extractEmployeeId(event, eventClass);
             UUID eventId = extractEventId(event, eventClass);
@@ -83,12 +89,6 @@ public class EmployeeHistoryUpdater {
 
     private <T> T deserializeEvent(String message, Class<T> eventClass) throws JsonProcessingException {
         return objectMapper.readValue(message, eventClass);
-    }
-
-    private void validateEvent(Object event) {
-        if (event == null) {
-            throw new IllegalArgumentException("Deserialized event cannot be null");
-        }
     }
 
     private <T> UUID extractEmployeeId(T event, Class<T> eventClass) throws ReflectiveOperationException {
@@ -156,5 +156,22 @@ public class EmployeeHistoryUpdater {
         return message != null && message.length() > maxLength 
             ? message.substring(0, maxLength) + "..." 
             : message;
+    }
+
+    private <T> boolean isEventInvalid(T event, Class<T> eventClass) {
+        if (event == null) {
+            return true; 
+        }
+        
+        if (eventClass.equals(EmployeeCreatedEvent.class)) {
+            EmployeeCreatedEvent createdEvent = (EmployeeCreatedEvent) event;
+            return createdEvent.eventId() == null || createdEvent.employeeId() == null;
+        } else if (eventClass.equals(EmployeeStatusChangedEvent.class)) {
+            EmployeeStatusChangedEvent statusChangedEvent = (EmployeeStatusChangedEvent) event;
+            return statusChangedEvent.eventId() == null || statusChangedEvent.employeeId() == null ||
+                   statusChangedEvent.oldStatus() == null || statusChangedEvent.newStatus() == null;
+        }
+        
+        return false; 
     }
 }

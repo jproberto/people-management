@@ -1,6 +1,5 @@
 package com.itau.hr.people_management.domain.employee.entity;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 import com.itau.hr.people_management.domain.department.entity.Department;
@@ -30,21 +29,19 @@ public class Employee {
     private UUID id;
     private String name;
     private Email email;
-    private LocalDate hireDate;
     private EmployeeStatus status;
     private Department department;
     private Position position;
     
-    public static Employee create(UUID id, String name, Email email, LocalDate hireDate, EmployeeStatus status, Department department, Position position) {
+    public static Employee create(UUID id, String name, Email email, EmployeeStatus status, Department department, Position position) {
         validateId(id);
         validateName(name);
         validateEmail(email);
-        validateHireDate(hireDate);
         validateStatus(status);
         validateDepartment(department);
         validatePosition(position);
 
-        return new Employee(id, name, email, hireDate, status, department, position);
+        return new Employee(id, name, email, status, department, position);
     }
 
     private static void validateId(UUID id) {
@@ -66,15 +63,6 @@ public class Employee {
     private static void validateEmail(Email email) {
         if (email == null) {
             throw new IllegalArgumentException(messageSource.getMessage("validation.employee.email.null"));
-        }
-    }
-
-    private static void validateHireDate(LocalDate hireDate) {
-        if (hireDate == null) {
-            throw new IllegalArgumentException(messageSource.getMessage("validation.employee.hiredate.null"));
-        }
-        if (hireDate.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException(messageSource.getMessage("validation.employee.hiredate.future"));
         }
     }
 

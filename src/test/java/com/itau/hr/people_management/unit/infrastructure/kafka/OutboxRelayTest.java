@@ -1,11 +1,15 @@
 package com.itau.hr.people_management.unit.infrastructure.kafka;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -25,10 +29,11 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.itau.hr.people_management.domain.employee.enumeration.EventType;
 import com.itau.hr.people_management.infrastructure.kafka.OutboxRelay;
-import com.itau.hr.people_management.infrastructure.outbox.entity.OutboxMessage;
 import com.itau.hr.people_management.infrastructure.outbox.enumeration.OutboxMessageStatus;
-import com.itau.hr.people_management.infrastructure.outbox.repository.OutboxMessageRepository;
+import com.itau.hr.people_management.infrastructure.persistence.entity.OutboxMessage;
+import com.itau.hr.people_management.infrastructure.persistence.repository.OutboxMessageRepository;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("OutboxRelay Unit Tests")
@@ -82,7 +87,7 @@ class OutboxRelayTest {
         @DisplayName("Should process pending messages")
         void shouldProcessPendingMessages() {
             // Arrange
-            setupOutboxMessage234("com.itau.hr.people_management.domain.employee.event.EmployeeCreatedEvent");
+            setupOutboxMessage234(EventType.EMPLOYEE_CREATED_EVENT);
             when(outboxMessageRepository.findByStatusInAndNextAttemptAtBeforeOrderByOccurredOnAsc(
                 any(), any(), any())).thenReturn(List.of(outboxMessage));
             when(kafkaTemplate.send("employee.created", aggregateId.toString(), payload))
@@ -124,7 +129,7 @@ class OutboxRelayTest {
         @DisplayName("Should map EmployeeCreatedEvent to correct topic")
         void shouldMapEmployeeCreatedEventToCorrectTopic() {
             // Arrange
-            setupOutboxMessage234("com.itau.hr.people_management.domain.employee.event.EmployeeCreatedEvent");
+            setupOutboxMessage234(EventType.EMPLOYEE_CREATED_EVENT);
             when(outboxMessageRepository.findByStatusInAndNextAttemptAtBeforeOrderByOccurredOnAsc(
                 any(), any(), any())).thenReturn(List.of(outboxMessage));
             when(kafkaTemplate.send(eq("employee.created"), any(), any())).thenReturn(future);
@@ -140,7 +145,7 @@ class OutboxRelayTest {
         @DisplayName("Should map EmployeeStatusChangedEvent to correct topic")
         void shouldMapEmployeeStatusChangedEventToCorrectTopic() {
             // Arrange
-            setupOutboxMessage234("com.itau.hr.people_management.domain.employee.event.EmployeeStatusChangedEvent");
+            setupOutboxMessage234(EventType.EMPLOYEE_STATUS_CHANGED_EVENT);
             when(outboxMessageRepository.findByStatusInAndNextAttemptAtBeforeOrderByOccurredOnAsc(
                 any(), any(), any())).thenReturn(List.of(outboxMessage));
             when(kafkaTemplate.send(eq("employee.status.changed"), any(), any())).thenReturn(future);
@@ -156,7 +161,8 @@ class OutboxRelayTest {
         @DisplayName("Should handle unknown event type")
         void shouldHandleUnknownEventType() {
             // Arrange
-            setupOutboxMessage14("unknown.event.type");
+            when(outboxMessage.getId()).thenReturn(UUID.randomUUID());
+            when(outboxMessage.getEventType()).thenReturn("unkown.event.type");
             when(outboxMessageRepository.findByStatusInAndNextAttemptAtBeforeOrderByOccurredOnAsc(
                 any(), any(), any())).thenReturn(List.of(outboxMessage));
 
@@ -178,7 +184,7 @@ class OutboxRelayTest {
         @DisplayName("Should handle successful Kafka send")
         void shouldHandleSuccessfulKafkaSend() {
             // Arrange
-            setupOutboxMessage1234("com.itau.hr.people_management.domain.employee.event.EmployeeCreatedEvent");
+            setupOutboxMessage1234(EventType.EMPLOYEE_CREATED_EVENT);
             when(outboxMessageRepository.findByStatusInAndNextAttemptAtBeforeOrderByOccurredOnAsc(
                 any(), any(), any())).thenReturn(List.of(outboxMessage));
             when(kafkaTemplate.send(any(), any(), any())).thenReturn(future);
@@ -203,7 +209,7 @@ class OutboxRelayTest {
         @DisplayName("Should handle failed Kafka send with retry")
         void shouldHandleFailedKafkaSendWithRetry() {
             // Arrange
-            setupOutboxMessage("com.itau.hr.people_management.domain.employee.event.EmployeeCreatedEvent");
+            setupOutboxMessage(EventType.EMPLOYEE_CREATED_EVENT);
             when(outboxMessage.getRetryAttempts()).thenReturn(1, 2);
             when(outboxMessageRepository.findByStatusInAndNextAttemptAtBeforeOrderByOccurredOnAsc(
                 any(), any(), any())).thenReturn(List.of(outboxMessage));
@@ -228,7 +234,7 @@ class OutboxRelayTest {
         @DisplayName("Should move to dead letter after max retries")
         void shouldMoveToDeadLetterAfterMaxRetries() {
             // Arrange
-            setupOutboxMessage("com.itau.hr.people_management.domain.employee.event.EmployeeCreatedEvent");
+            setupOutboxMessage(EventType.EMPLOYEE_CREATED_EVENT);
             when(outboxMessage.getRetryAttempts()).thenReturn(4, 5);
             when(outboxMessageRepository.findByStatusInAndNextAttemptAtBeforeOrderByOccurredOnAsc(
                 any(), any(), any())).thenReturn(List.of(outboxMessage));
@@ -267,7 +273,7 @@ class OutboxRelayTest {
         @DisplayName("Should handle unexpected processing exception")
         void shouldHandleUnexpectedProcessingException() {
             // Arrange
-            setupOutboxMessage1234("com.itau.hr.people_management.domain.employee.event.EmployeeCreatedEvent");
+            setupOutboxMessage1234(EventType.EMPLOYEE_CREATED_EVENT);
             when(outboxMessageRepository.findByStatusInAndNextAttemptAtBeforeOrderByOccurredOnAsc(
                 any(), any(), any())).thenReturn(List.of(outboxMessage));
             when(kafkaTemplate.send(any(), any(), any())).thenThrow(new RuntimeException("Kafka error"));
@@ -281,29 +287,24 @@ class OutboxRelayTest {
         }
     }
 
-    private void setupOutboxMessage(String eventType) {
+    private void setupOutboxMessage(EventType eventType) {
         when(outboxMessage.getId()).thenReturn(UUID.randomUUID());
         when(outboxMessage.getAggregateId()).thenReturn(aggregateId);
         when(outboxMessage.getPayload()).thenReturn(payload);
-        when(outboxMessage.getEventType()).thenReturn(eventType);
+        when(outboxMessage.getEventType()).thenReturn(eventType.name());
         when(outboxMessage.getRetryAttempts()).thenReturn(0);
     }
 
-    private void setupOutboxMessage234(String eventType) {
+    private void setupOutboxMessage234(EventType eventType) {
         when(outboxMessage.getAggregateId()).thenReturn(aggregateId);
         when(outboxMessage.getPayload()).thenReturn(payload);
-        when(outboxMessage.getEventType()).thenReturn(eventType);
+        when(outboxMessage.getEventType()).thenReturn(eventType.name());
     }
 
-     private void setupOutboxMessage14(String eventType) {
-        when(outboxMessage.getId()).thenReturn(UUID.randomUUID());
-        when(outboxMessage.getEventType()).thenReturn(eventType);
-     }
-
-     private void setupOutboxMessage1234(String eventType) {
+     private void setupOutboxMessage1234(EventType eventType) {
         when(outboxMessage.getId()).thenReturn(UUID.randomUUID());
         when(outboxMessage.getAggregateId()).thenReturn(aggregateId);
         when(outboxMessage.getPayload()).thenReturn(payload);
-        when(outboxMessage.getEventType()).thenReturn(eventType);
+        when(outboxMessage.getEventType()).thenReturn(eventType.name());
      }
 }

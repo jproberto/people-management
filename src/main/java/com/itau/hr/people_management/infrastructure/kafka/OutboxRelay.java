@@ -16,15 +16,14 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.itau.hr.people_management.infrastructure.outbox.entity.OutboxMessage;
+import com.itau.hr.people_management.domain.employee.enumeration.EventType;
 import com.itau.hr.people_management.infrastructure.outbox.enumeration.OutboxMessageStatus;
-import com.itau.hr.people_management.infrastructure.outbox.repository.OutboxMessageRepository;
+import com.itau.hr.people_management.infrastructure.persistence.entity.OutboxMessage;
+import com.itau.hr.people_management.infrastructure.persistence.repository.OutboxMessageRepository;
 
 @Component
 public class OutboxRelay {
     private static final Logger log = LoggerFactory.getLogger(OutboxRelay.class);
-    private static final String EMPLOYEE_CREATED_EVENT = "com.itau.hr.people_management.domain.employee.event.EmployeeCreatedEvent";
-    private static final String EMPLOYEE_STATUS_CHANGED_EVENT = "com.itau.hr.people_management.domain.employee.event.EmployeeStatusChangedEvent";
     
     private final OutboxMessageRepository outboxMessageRepository;
     private final KafkaTemplate<String, String> kafkaTemplate;
@@ -185,8 +184,8 @@ public class OutboxRelay {
 
     private Map<String, String> initializeEventTopicMapping() {
         return Map.of(
-            EMPLOYEE_CREATED_EVENT, "employee.created",
-            EMPLOYEE_STATUS_CHANGED_EVENT, "employee.status.changed"
+            EventType.EMPLOYEE_CREATED_EVENT.name(), "employee.created",
+            EventType.EMPLOYEE_STATUS_CHANGED_EVENT.name(), "employee.status.changed"
         );
     }
 

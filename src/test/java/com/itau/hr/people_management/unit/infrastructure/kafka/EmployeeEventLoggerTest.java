@@ -63,11 +63,11 @@ class EmployeeEventLoggerTest {
 
             // Assert
             verify(objectMapper).readValue(jsonMessage, EmployeeCreatedEvent.class);
-            verify(employeeCreatedEvent).eventId();
-            verify(employeeCreatedEvent).employeeId();
-            verify(employeeCreatedEvent).employeeName();
-            verify(employeeCreatedEvent).employeeEmail();
-            verify(employeeCreatedEvent).occurredOn();
+            verify(employeeCreatedEvent, atLeast(1)).eventId();
+            verify(employeeCreatedEvent, atLeast(1)).employeeId();
+            verify(employeeCreatedEvent, atLeast(1)).employeeName();
+            verify(employeeCreatedEvent, atLeast(1)).employeeEmail();
+            verify(employeeCreatedEvent, atLeast(1)).occurredOn();
         }
 
         @Test
@@ -127,11 +127,11 @@ class EmployeeEventLoggerTest {
 
             // Assert
             verify(objectMapper).readValue(jsonMessage, EmployeeStatusChangedEvent.class);
-            verify(employeeStatusChangedEvent).eventId();
-            verify(employeeStatusChangedEvent).employeeId();
-            verify(employeeStatusChangedEvent).oldStatus();
-            verify(employeeStatusChangedEvent).newStatus();
-            verify(employeeStatusChangedEvent).occurredOn();
+            verify(employeeStatusChangedEvent, atLeast(1)).eventId();
+            verify(employeeStatusChangedEvent, atLeast(1)).employeeId();
+            verify(employeeStatusChangedEvent, atLeast(1)).oldStatus();
+            verify(employeeStatusChangedEvent, atLeast(1)).newStatus();
+            verify(employeeStatusChangedEvent, atLeast(1)).occurredOn();
         }
 
         @Test

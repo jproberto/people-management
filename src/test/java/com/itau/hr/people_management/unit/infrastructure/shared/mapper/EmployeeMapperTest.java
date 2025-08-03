@@ -1,10 +1,12 @@
 package com.itau.hr.people_management.unit.infrastructure.shared.mapper;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.sameInstance;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -20,9 +22,9 @@ import com.itau.hr.people_management.domain.employee.entity.Employee;
 import com.itau.hr.people_management.domain.employee.enumeration.EmployeeStatus;
 import com.itau.hr.people_management.domain.position.entity.Position;
 import com.itau.hr.people_management.domain.shared.vo.Email;
-import com.itau.hr.people_management.infrastructure.department.entity.DepartmentJpaEntity;
-import com.itau.hr.people_management.infrastructure.employee.entity.EmployeeJpaEntity;
-import com.itau.hr.people_management.infrastructure.position.entity.PositionJpaEntity;
+import com.itau.hr.people_management.infrastructure.persistence.entity.DepartmentJpaEntity;
+import com.itau.hr.people_management.infrastructure.persistence.entity.EmployeeJpaEntity;
+import com.itau.hr.people_management.infrastructure.persistence.entity.PositionJpaEntity;
 import com.itau.hr.people_management.infrastructure.shared.mapper.DepartmentMapper;
 import com.itau.hr.people_management.infrastructure.shared.mapper.EmployeeMapper;
 import com.itau.hr.people_management.infrastructure.shared.mapper.PositionMapper;
@@ -55,7 +57,6 @@ class EmployeeMapperTest {
     private UUID employeeId;
     private String name;
     private String emailAddress;
-    private LocalDate hireDate;
     private EmployeeStatus status;
 
     @BeforeEach
@@ -63,7 +64,6 @@ class EmployeeMapperTest {
         employeeId = UUID.randomUUID();
         name = "John Doe";
         emailAddress = "john.doe@example.com";
-        hireDate = LocalDate.of(2023, 1, 15);
         status = EmployeeStatus.ACTIVE;
     }
 
@@ -78,7 +78,6 @@ class EmployeeMapperTest {
             when(domainEmployee.getName()).thenReturn(name);
             when(domainEmployee.getEmail()).thenReturn(email);
             when(email.getAddress()).thenReturn(emailAddress);
-            when(domainEmployee.getHireDate()).thenReturn(hireDate);
             when(domainEmployee.getStatus()).thenReturn(status);
             when(domainEmployee.getDepartment()).thenReturn(department);
             when(domainEmployee.getPosition()).thenReturn(position);
@@ -93,7 +92,6 @@ class EmployeeMapperTest {
             assertThat(result.getId(), is(employeeId));
             assertThat(result.getName(), is(name));
             assertThat(result.getEmail(), is(emailAddress));
-            assertThat(result.getHireDate(), is(hireDate));
             assertThat(result.getStatus(), is(status));
             assertThat(result.getDepartment(), is(sameInstance(departmentJpaEntity)));
             assertThat(result.getPosition(), is(sameInstance(positionJpaEntity)));
@@ -111,7 +109,6 @@ class EmployeeMapperTest {
             when(jpaEmployee.getId()).thenReturn(employeeId);
             when(jpaEmployee.getName()).thenReturn(name);
             when(jpaEmployee.getEmail()).thenReturn(emailAddress);
-            when(jpaEmployee.getHireDate()).thenReturn(hireDate);
             when(jpaEmployee.getStatus()).thenReturn(status);
             when(jpaEmployee.getDepartment()).thenReturn(departmentJpaEntity);
             when(jpaEmployee.getPosition()).thenReturn(positionJpaEntity);
@@ -127,7 +124,6 @@ class EmployeeMapperTest {
             assertThat(result.getId(), is(employeeId));
             assertThat(result.getName(), is(name));
             assertThat(result.getEmail(), is(sameInstance(email)));
-            assertThat(result.getHireDate(), is(hireDate));
             assertThat(result.getStatus(), is(status));
             assertThat(result.getDepartment(), is(sameInstance(department)));
             assertThat(result.getPosition(), is(sameInstance(position)));

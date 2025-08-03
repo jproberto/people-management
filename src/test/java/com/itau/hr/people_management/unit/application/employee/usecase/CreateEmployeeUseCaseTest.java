@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -73,7 +72,6 @@ class CreateEmployeeUseCaseTest {
         request = new CreateEmployeeRequest();
         request.setName("John Doe");
         request.setEmail("john.doe@itau.com.br");
-        request.setHireDate(LocalDate.of(2024, 1, 15));
         request.setDepartmentId(UUID.randomUUID());
         request.setPositionId(UUID.randomUUID());
     }
@@ -100,7 +98,7 @@ class CreateEmployeeUseCaseTest {
             
             when(Email.create(request.getEmail())).thenReturn(email);
             when(UUID.randomUUID()).thenReturn(employeeId);
-            when(Employee.create(employeeId, request.getName(), email, request.getHireDate(), 
+            when(Employee.create(employeeId, request.getName(), email, 
                     EmployeeStatus.ACTIVE, department, position)).thenReturn(employee);
 
             // Act
@@ -188,7 +186,7 @@ class CreateEmployeeUseCaseTest {
             
             when(Email.create(request.getEmail())).thenReturn(email);
             when(UUID.randomUUID()).thenReturn(employeeId);
-            when(Employee.create(any(), any(), any(), any(), any(), any(), any())).thenReturn(employee);
+            when(Employee.create(any(), any(), any(), any(), any(), any())).thenReturn(employee);
 
             // Act
             useCase.execute(request);
@@ -198,7 +196,6 @@ class CreateEmployeeUseCaseTest {
                 eq(employeeId),
                 eq(request.getName()),
                 eq(email),
-                eq(request.getHireDate()),
                 eq(EmployeeStatus.ACTIVE),
                 eq(department),
                 eq(position)
@@ -226,7 +223,7 @@ class CreateEmployeeUseCaseTest {
             
             when(Email.create(request.getEmail())).thenReturn(email);
             when(UUID.randomUUID()).thenReturn(employeeId);
-            when(Employee.create(any(), any(), any(), any(), any(), any(), any())).thenReturn(employee);
+            when(Employee.create(any(), any(), any(), any(), any(), any())).thenReturn(employee);
 
             // Act
             useCase.execute(request);
@@ -256,7 +253,7 @@ class CreateEmployeeUseCaseTest {
              MockedStatic<UUID> uuidMock = mockStatic(UUID.class)) {
             
             when(Email.create(request.getEmail())).thenReturn(email);
-            when(Employee.create(any(), any(), any(), any(), any(), any(), any())).thenReturn(employee);
+            when(Employee.create(any(), any(), any(), any(), any(), any())).thenReturn(employee);
 
             // Act & Assert
             assertThrows(RuntimeException.class, () -> useCase.execute(request));
