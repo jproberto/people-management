@@ -1,0 +1,35 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml # Onde o Promtail armazena o offset de leitura do arquivo
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push # Onde o Loki está escutando
+
+scrape_configs:
+  - job_name: spring-boot-app-local-logs # Nome do job para identificar no Grafana
+    static_configs:
+      - targets:
+          - localhost # O Promtail está rodando no mesmo host que o log
+        labels:
+          job: spring-boot-app-logs # Rótulo principal para filtrar no Grafana (ex: {job="spring-boot-app-logs"})
+          __path__: /var/log/app/application.log # <-- O caminho do arquivo de log DENTRO DO CONTAINER Promtail
+          application: people-management-service 
+    pipeline_stages:
+      - json:
+          expressions:
+            level: level 
+            message: message 
+            thread_name: thread_name 
+            logger_name: logger_name 
+            event_id: event_id
+            employee_id: employee_id
+          labels: # Estes campos serão transformados em rótulos pesquisáveis no Loki/Grafana
+            - level
+            - thread_name
+            - logger_name
+            - event_id
+            - employee_id
+     
