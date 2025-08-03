@@ -44,6 +44,7 @@ import com.itau.hr.people_management.integration.infrastructure.kafka.support.Te
 import ch.qos.logback.classic.Logger;
 
 @SpringBootTest(properties = {
+    // ========== KAFKA CONFIGURATION ==========
     "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}",
     "spring.kafka.consumer.auto-offset-reset=earliest", 
     "spring.kafka.consumer.group-id=${random.uuid}",
@@ -52,7 +53,26 @@ import ch.qos.logback.classic.Logger;
     "spring.kafka.producer.retries=0",
     "spring.kafka.producer.acks=1", 
     "spring.kafka.consumer.session.timeout.ms=10000",
-    "spring.kafka.consumer.heartbeat.interval.ms=3000"
+    "spring.kafka.consumer.heartbeat.interval.ms=3000",
+    
+    // ========== DATABASE CONFIGURATION (H2) ==========
+    "spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
+    "spring.datasource.driver-class-name=org.h2.Driver",  // ✅ Driver H2
+    "spring.datasource.username=sa",
+    "spring.datasource.password=",
+    
+    // ========== JPA/HIBERNATE CONFIGURATION ==========
+    "spring.jpa.hibernate.ddl-auto=create-drop",
+    "spring.jpa.database-platform=org.hibernate.dialect.H2Dialect",  // ✅ Dialeto H2
+    "spring.jpa.show-sql=false",
+    
+    // ========== FLYWAY CONFIGURATION ==========
+    "spring.flyway.enabled=false",  // ✅ Desabilitado para H2 in-memory
+    
+    // ========== LOGGING CONFIGURATION ==========
+    "logging.level.org.springframework.kafka=WARN",
+    "logging.level.org.hibernate=WARN",
+    "logging.level.org.h2=WARN"
 })
 @EmbeddedKafka(
     partitions = 1,
@@ -83,7 +103,6 @@ class EmployeeHistoryUpdaterIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        
         employeeHistoryUpdaterLogger = (Logger) LoggerFactory.getLogger("com.itau.hr.people_management.infrastructure.kafka.EmployeeHistoryUpdater");
         testLogAppender = new TestLogAppender();
         testLogAppender.start();
