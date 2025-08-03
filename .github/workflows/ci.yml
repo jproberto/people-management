@@ -11,4 +11,5 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+    - run: chmod +x ./mvnw
     - run: ./mvnw clean test
