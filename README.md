@@ -42,12 +42,12 @@ Sistema backend para o time de **Gente & Gestão** responsável por:
 │ │ ├── entity/ # Position.java 
 │ │ ├── enumeration/ # PositionLevel.java 
 │ │ └── repository/ # PositionRepository - Interface 
-│ └── shared/ # Elementos compartilhados 
-│ │ └── event/ # DomainEvent
-│ │ └── exception / # BusinessException, ConflictException, NotFoundException
-│ │ └── message/ # DomainMessageSource
+│ ├── shared/ # Elementos compartilhados 
+│ │ ├── event/ # DomainEvent
+│ │ ├── exception / # BusinessException, ConflictException, NotFoundException
+│ │ ├── message/ # DomainMessageSource
 │ │ └── vo/ # Email
-│ ├── 🔧 application/ # Casos de Uso (Application Services) 
+├── 🔧 application/ # Casos de Uso (Application Services) 
 │ ├── department/ 
 │ │ ├── dto/ # CreateDepartmentRequest, DepartmentResponse 
 │ │ └── usecase/ # CreateDepartmentUseCase, GetDepartmentUseCase
@@ -57,14 +57,14 @@ Sistema backend para o time de **Gente & Gestão** responsável por:
 │ └── position/ 
 │ | ├── dto/ # CreatePositionRequest, PositionResponse 
 │ | └── usecase/ # CreatePositionUseCase, GetPositionUseCase 
-│ ├── 🔌 infrastructure/ # Adaptadores (Frameworks & Drivers) 
+├── 🔌 infrastructure/ # Adaptadores (Frameworks & Drivers) 
 │ ├── kafka/ # Kafka Producers & Consumers 
 │ ├── outbox/ # Outbox Pattern Implementation 
 │ ├── persistence/ # JPA Entities & Repository Implementations 
 │ └── shared/ 
-| │ └── mapper/ # EmployeeMapper, DepartmentMapper, PositionMapper 
+| │ ├── mapper/ # EmployeeMapper, DepartmentMapper, PositionMapper 
 | | └── message/ # DomainMessageSourceInitializer, SpringDomainMessageSource
-│ ├── 🌐 interfaces/ # Interface Adapters (Controllers & DTOs) 
+├── 🌐 interfaces/ # Interface Adapters (Controllers & DTOs) 
 │ ├── department/ 
 │ │ ├── controller/ # DepartmentController 
 │ │ ├── dto/ # DepartmentRequestDTO, DepartmentResponseDTO 
@@ -80,7 +80,7 @@ Sistema backend para o time de **Gente & Gestão** responsável por:
 │ └── shared/ 
 │ │ ├── dto/ # ApiErrorResponse 
 │ │ └── exception_handler/ # GlobalExceptionHandler 
-│ └── 🔧 config/ # Configurações do Spring 
+├── 🔧 config/ # Configurações do Spring 
 │ │ ├── KafkaTopicConfig.java # Configuração dos tópicos Kafka 
 │ │ └── OpenApiConfig.java # Configuração do Swagger/OpenAPI
 ```
@@ -386,10 +386,9 @@ jobs:
 
 ### Decisões Influenciadas por IA:
 
-1. **Outbox Pattern**: Discutido garantias de entrega
-2. **Testcontainers**: Sugestão para testes reais
-3. **Event-Driven Architecture**: Análise de trade-offs
-4. **Estrutura de packages**: Organização hexagonal
+1. **Testcontainers**: Sugestão para testes reais
+2. **Event-Driven Architecture**: Análise de trade-offs
+3. **Estrutura de packages**: Organização hexagonal
 
 ### Processo de Desenvolvimento:
 
@@ -399,25 +398,6 @@ jobs:
 - ✅ **Documentação** assistida
 
 **📄 Detalhes completos:** [AI_USAGE.md](AI_USAGE.md)
-
----
-
-## 🎯 Próximos Passos
-
-### Roadmap Técnico:
-
-- [ ] **Circuit Breaker** (Resilience4j)
-- [ ] **Distributed Tracing** (Zipkin)
-- [ ] **Rate Limiting** (Bucket4j)
-- [ ] **API Versioning** (URI/Headers)
-- [ ] **Saga Pattern** para transações distribuídas
-
-### Features de Negócio:
-
-- [ ] **Transferência** entre departamentos
-- [ ] **Histórico** de mudanças
-- [ ] **Relatórios** de colaboradores
-- [ ] **Integração** com RH
 
 ---
 
@@ -433,13 +413,6 @@ jobs:
 - ✅ **CI/CD**: Pipeline automatizado completo
 - ✅ **Observabilidade**: Logs estruturados + métricas
 - ✅ **Documentation**: Swagger + README completo
-
-### 📈 Métricas de Qualidade:
-
-- **Cobertura de Testes**: 87%
-- **Complexidade Ciclomática**: < 10
-- **Tech Debt**: Baixo
-- **Performance**: < 200ms (99th percentile)
 
 ---
 
